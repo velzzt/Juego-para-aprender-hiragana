@@ -4,7 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class HiraganaEnemigo extends JPanel implements ActionListener,Cloneable{
+public class HiraganaEnemigo extends JPanel implements ActionListener{
+
 	
 	private Timer timer;
 	int x=920;
@@ -20,7 +21,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener,Cloneable{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		//Crear objeto que defina la fuente del hiragana
+		//Crear objeto que defina la fuente (tipo de letra) del hiragana
 		Font font = new Font("MS Mincho",1,48);
 		g.setFont(font);
 		
@@ -32,7 +33,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener,Cloneable{
 		
 		//Caracter en el centro del rectangulo
 		String hiragana="あ";
-		FontMetrics fm= g.getFontMetrics();
+		FontMetrics fm= g.getFontMetrics(); 
 		int anchoCaracter=fm.stringWidth(hiragana);
 		int altoCaracter=fm.getAscent();
 	    int caracterX = x + (80 - anchoCaracter) / 2;
