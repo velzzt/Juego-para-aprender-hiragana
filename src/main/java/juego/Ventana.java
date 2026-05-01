@@ -6,18 +6,20 @@ import java.awt.Color;
 import javax.swing.JFrame;
 
 public class Ventana extends JFrame{
-
+	
+	HiraganaEnemigo panel = new HiraganaEnemigo();
+		
 	public Ventana() {
 		
 		setBackground(Color.black);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		add(new HiraganaEnemigo(), BorderLayout.CENTER);
+		add(panel, BorderLayout.CENTER);
 		setTitle("Hiragana Enemigo");
-		setSize(980,600);
+		pack();
+		setResizable(false);
 		setLocationRelativeTo(null); //ventana en el centro
 		setVisible(true);
-		
+		panel.asignarPosicionRect();
 	}
 	
 	public static void main(String[] args) {

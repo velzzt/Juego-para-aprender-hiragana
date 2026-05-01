@@ -4,51 +4,81 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class HiraganaEnemigo extends JPanel implements ActionListener,Cloneable{
+public class HiraganaEnemigo extends JPanel implements ActionListener{
 	
-	private Timer timer;
-	int x=920;
-	int y=0;
-	int velocidadX=3;
+	private String[]caracteres= {"あ","い","う","え","お"};
+	private String caracterSeleccionado;
+	private int x; //posición inicial del rectangulo en el eje x
+	private int y; //posicion inicial del rectangulo en el eje y
+	private int altoRect=100;
+	private int anchoRect=100;
 	
-	HiraganaEnemigo(){
-		this.setPreferredSize(new Dimension(800,600));
-		timer=new Timer(20,this);
-		timer.start();
+	Timer temporizador;
+	
+	//Metodo que determina una posicion aleatoria al rectangulo (en el border derecho)
+	public void asignarPosicionRect() {
+		x=getWidth()-anchoRect;
+		y=(int)(Math.random()*(getHeight()-altoRect));
+		
+	}	
+	
+	//Elige un caracter aleatorio del array
+	public void asignarCaracter() {
+		int indice= (int)(Math.random()*caracteres.length);
+		caracterSeleccionado=caracteres[indice];
+		
 	}
 	
-	public void paintComponent(Graphics g) {
+	public HiraganaEnemigo() {
+		
+		setBackground(Color.black);
+		setPreferredSize(new Dimension(1024,768));
+		asignarCaracter();
+		temporizador=new Timer(10,this);
+		temporizador.start();
+	}
+	
+	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
 		
-		//Crear objeto que defina la fuente del hiragana
-		Font font = new Font("MS Mincho",1,48);
-		g.setFont(font);
+		//casting para más funciones
+		Graphics2D g2d = (Graphics2D) g;
 		
-		//Dibujar el rectángulo
-		g.setColor(Color.gray);
-		g.fillRect(x, y, 80, 80);
-		g.setColor(Color.DARK_GRAY);
-		g.drawRect(x, y, 80, 80);
+		//Dibujar el rectangulo
+		g2d.setColor(Color.gray);
+		g2d.fillRect(x, y, anchoRect, altoRect);
+		g2d.setColor(Color.black);
+		g2d.drawRect(x, y, anchoRect, altoRect);
 		
-		//Caracter en el centro del rectangulo
-		String hiragana="あ";
-		FontMetrics fm= g.getFontMetrics();
-		int anchoCaracter=fm.stringWidth(hiragana);
-		int altoCaracter=fm.getAscent();
-	    int caracterX = x + (80 - anchoCaracter) / 2;
-	    int caracterY = y + (80 + altoCaracter) / 2 - fm.getDescent();	
-		g.drawString(hiragana,caracterX, caracterY);
+		//Para el caracter
+		Font fuente=new Font("MS mincho",Font.BOLD,100); //fuente para el caracter
+		g2d.setFont(fuente);
+		g2d.setColor(Color.black);
 		
+		//conseguir las métricas del caracter para centrarlo en el rectangulo
+		FontMetrics fm = g2d.getFontMetrics(fuente);
+		
+                //posiciones del caracter
+		int caracterx= x + (anchoRect-fm.stringWidth(caracterSeleccionado))/2;
+		int caractery= y + ((altoRect-fm.getHeight())/2)+fm.getAscent() ;
+                
+		//dibujar el caracter
+		g2d.drawString(caracterSeleccionado, caracterx, caractery);
 	}
 
+	//para que se mueva el rectangulo
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		x=x-velocidadX;
+		x--;
 		
+		if (x+anchoRect<0) {
+			asignarPosicionRect(); //nueva posicion
+			asignarCaracter(); //nuevo caracter aleatorio
+			
+		}
 		repaint();
 		
-	}
-	
 		
+	}
 	
 }
