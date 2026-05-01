@@ -14,6 +14,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener{
 	private int anchoRect=100;
 	
 	Timer temporizador;
+	int velocidad=3;
 	
 	//Metodo que determina una posicion aleatoria al rectangulo (en el border derecho)
 	public void asignarPosicionRect() {
@@ -38,7 +39,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener{
 		temporizador.start();
 	}
 	
-	protected void paintComponent(Graphics g){
+	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		
 		//casting para más funciones
@@ -58,11 +59,9 @@ public class HiraganaEnemigo extends JPanel implements ActionListener{
 		//conseguir las métricas del caracter para centrarlo en el rectangulo
 		FontMetrics fm = g2d.getFontMetrics(fuente);
 		
-                //posiciones del caracter
 		int caracterx= x + (anchoRect-fm.stringWidth(caracterSeleccionado))/2;
 		int caractery= y + ((altoRect-fm.getHeight())/2)+fm.getAscent() ;
-                
-		//dibujar el caracter
+		
 		g2d.drawString(caracterSeleccionado, caracterx, caractery);
 	}
 
