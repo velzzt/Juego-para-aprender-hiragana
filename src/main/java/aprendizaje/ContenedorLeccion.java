@@ -34,7 +34,7 @@ public class ContenedorLeccion extends JPanel{
 
          String[]rutaGif ={ "a_imagen.png", "a_imagen.png","a_imagen.png","a_imagen.png","a_imagen.png","a_imagen.png","a_imagen.png",
                             "a_imagen.png","a_imagen.png","a_imagen.png","a_imagen.png","a_imagen.png","a_imagen.png","a_imagen.png","a_imagen.png"};
-        String[]texto={"a","i","u","e","o","a","a","a","a","a","a","a","a","a","a"};
+        String[]texto={"a","i","u","e","o","ka","ga","ki","gi","ku","gu","ke","ge","ko","go"};
         String[]rutaAudio={};
 
         for(int i=0; i<15;i++){
