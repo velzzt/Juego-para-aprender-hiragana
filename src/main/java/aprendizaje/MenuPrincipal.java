@@ -95,16 +95,16 @@ public class MenuPrincipal extends JFrame {
     private void inicializarLecciones(){
 
         lista1=new ListaLeccion();
-        lista1.agregarLeccion(new Leccion("a_imagen.png", "audio/a.wav", "a")); //agregar lecciones (i , u)
+        lista1.agregarLeccion(new Leccion("a_imagen.png", "audio/a.wav", "a")); //agregar lecciones (a, i , u)
 
         lista2=new ListaLeccion();
         lista2.agregarLeccion(new Leccion("a_imagen.png", "audio/a.wav", "a")); //cambiar y agregar lecciones (e, o, ka)
 
         lista3=new ListaLeccion();
-        lista3.agregarLeccion(new Leccion("a_imagen.png", "audio/a.wav", "a")); //cambiar y agregar lecciones  (ga, ki, gi, ku)
+        lista3.agregarLeccion(new Leccion("a_imagen.png", "audio/a.wav", "a")); //cambiar y agregar lecciones  (sa, ki, shi, ku)
 
         lista4=new ListaLeccion();
-        lista4.agregarLeccion(new Leccion("a_imagen.png", "audio/a.wav", "a")); //cambiar y agregar lecciones (gu, ke, ge, ko, go)
+        lista4.agregarLeccion(new Leccion("a_imagen.png", "audio/a.wav", "a")); //cambiar y agregar lecciones (su, ke, se, ko, so)
     }
 
 
