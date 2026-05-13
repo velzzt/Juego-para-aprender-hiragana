@@ -52,7 +52,6 @@ public class Tarjeta extends JPanel {
 
                 ImageIcon icon = new ImageIcon(url);
 
-                // NO escales aquí todavía
                 gif.setIcon(icon);
 
             } else {

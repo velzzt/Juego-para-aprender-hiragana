@@ -95,17 +95,28 @@ public class MenuPrincipal extends JFrame {
     private void inicializarLecciones(){
 
         lista1=new ListaLeccion();
-        lista1.agregarLeccion(new Leccion("/a.gif", "/audio/a.wav", "a")); //agregar lecciones (a, i , u)
-        lista1.agregarLeccion(new Leccion("/u.gif", "/audio/u.wav", "u"));
-
+        lista1.agregarLeccion(new Leccion("/a.gif", "/audios/a.wav", "a")); //agregar lecciones (a, i , u)
+        lista1.agregarLeccion(new Leccion("/i.gif", "/audios/i.wav", "i"));
+        lista1.agregarLeccion(new Leccion("/u.gif", "/audios/u.wav", "u"));
+        
+        
         lista2=new ListaLeccion();
-        lista2.agregarLeccion(new Leccion("/e.gif", "/audio/e.wav", "e")); //cambiar y agregar lecciones (e, o, ka)
-
+        lista2.agregarLeccion(new Leccion("/e.gif", "/audios/e.wav", "e")); //cambiar y agregar lecciones (e, o, ka)
+        lista2.agregarLeccion(new Leccion("/o.gif", "/audios/o.wav", "o"));
+        lista2.agregarLeccion(new Leccion("/ka.gif", "/audios/ka.wav", "ka"));
+        
         lista3=new ListaLeccion();
-        lista3.agregarLeccion(new Leccion("/i.gif", "/audio/i.wav", "i")); //cambiar y agregar lecciones  (sa, ki, shi, ku)
+        lista3.agregarLeccion(new Leccion("/sa.gif", "/audios/sa.wav", "sa")); //cambiar y agregar lecciones  (sa, ki, shi, ku)
+        lista3.agregarLeccion(new Leccion("/ki.gif", "/audios/ki.wav", "ki"));
+        lista3.agregarLeccion(new Leccion("/shi.gif", "/audios/shi.wav", "shi"));//falta 
+        lista3.agregarLeccion(new Leccion("/ku.gif", "/audios/ku.wav", "ku"));
 
         lista4=new ListaLeccion();
-        lista4.agregarLeccion(new Leccion("/o.gif", "/audio/o.wav", "o")); //cambiar y agregar lecciones (su, ke, se, ko, so)
+        lista4.agregarLeccion(new Leccion("/su.gif", "/audios/su.wav", "su")); //cambiar y agregar lecciones (su, ke, se, ko, so)
+        lista4.agregarLeccion(new Leccion("/ke.gif", "/audios/ke.wav", "ke")); //falta
+        lista4.agregarLeccion(new Leccion("/se.gif", "/audios/se.wav", "se")); //falta
+        lista4.agregarLeccion(new Leccion("/ko.gif", "/audios/ko.wav", "ko")); //falta
+        lista4.agregarLeccion(new Leccion("/so.gif", "/audios/so.wav", "so")); //falta
         
         
         
