@@ -51,13 +51,17 @@ public class MenuPrincipal extends JFrame {
         titulo.setHorizontalAlignment(SwingConstants.CENTER); //Centramos el texto en el label
         titulo.setFont(new Font("SansSerif", Font.BOLD,50)); //en estilos puede ser 0,1,2,3 en vez de usar  Font.BOLD O Font.ITALIC, etc
         panel.add(titulo); //agregamos a 'panel'
-
+        
+        //Boton Apreder
         JButton btnAprender = new JButton("Aprender");
         btnAprender.setBounds(540, 350, 200, 40); //asignamos posicion y tamaño
+        btnAprender.setFocusPainted(false);
         panel.add(btnAprender); //agregamos a 'panel'
-
+        
+        //Boton Jugar
         JButton btnJugar = new JButton("Jugar");
         btnJugar.setBounds(540, 450, 200, 40); //asignamos posicion y tamaño
+        btnJugar.setFocusPainted(false);
         panel.add(btnJugar); //agregamos a 'panel'
 
         //Evento del boton 'Aprender'
@@ -95,28 +99,28 @@ public class MenuPrincipal extends JFrame {
     private void inicializarLecciones(){
 
         lista1=new ListaLeccion();
-        lista1.agregarLeccion(new Leccion("/a.gif", "/audios/a.wav", "a")); //agregar lecciones (a, i , u)
-        lista1.agregarLeccion(new Leccion("/i.gif", "/audios/i.wav", "i"));
-        lista1.agregarLeccion(new Leccion("/u.gif", "/audios/u.wav", "u"));
+        lista1.agregarLeccion(new Leccion("/gifs_simples/a.gif", "/vocales simples/a.wav", "a")); //agregar lecciones (a, i , u)
+        lista1.agregarLeccion(new Leccion("/gifs_simples/i.gif", "/vocales simples/i.wav", "i"));
+        lista1.agregarLeccion(new Leccion("/gifs_simples/u.gif", "/vocales simples/u.wav", "u"));
         
         
         lista2=new ListaLeccion();
-        lista2.agregarLeccion(new Leccion("/e.gif", "/audios/e.wav", "e")); //cambiar y agregar lecciones (e, o, ka)
-        lista2.agregarLeccion(new Leccion("/o.gif", "/audios/o.wav", "o"));
-        lista2.agregarLeccion(new Leccion("/ka.gif", "/audios/ka.wav", "ka"));
+        lista2.agregarLeccion(new Leccion("/gifs_simples/e.gif", "/vocales simples/e.wav", "e")); //cambiar y agregar lecciones (e, o, ka)
+        lista2.agregarLeccion(new Leccion("/gifs_simples/o.gif", "/vocales simples/o.wav", "o"));
+        lista2.agregarLeccion(new Leccion("/gifs_k/ka.gif",  "/vocales con k-/ka.wav", "ka"));
         
         lista3=new ListaLeccion();
-        lista3.agregarLeccion(new Leccion("/sa.gif", "/audios/sa.wav", "sa")); //cambiar y agregar lecciones  (sa, ki, shi, ku)
-        lista3.agregarLeccion(new Leccion("/ki.gif", "/audios/ki.wav", "ki"));
-        lista3.agregarLeccion(new Leccion("/shi.gif", "/audios/shi.wav", "shi"));//falta 
-        lista3.agregarLeccion(new Leccion("/ku.gif", "/audios/ku.wav", "ku"));
+        lista3.agregarLeccion(new Leccion("/gifs_s/sa.gif",  "/vocales con s-/sa.wav", "sa")); //cambiar y agregar lecciones  (sa, ki, shi, ku)
+        lista3.agregarLeccion(new Leccion("/gifs_k/ki.gif",  "/vocales con k-/ki.wav", "ki"));
+        lista3.agregarLeccion(new Leccion("/gifs_s/shi.gif", "/vocales con s-/shi.wav", "shi"));//falta 
+        lista3.agregarLeccion(new Leccion("/gifs_k/ku.gif",  "/vocales con k-/ku.wav", "ku"));
 
         lista4=new ListaLeccion();
-        lista4.agregarLeccion(new Leccion("/su.gif", "/audios/su.wav", "su")); //cambiar y agregar lecciones (su, ke, se, ko, so)
-        lista4.agregarLeccion(new Leccion("/ke.gif", "/audios/ke.wav", "ke")); //falta
-        lista4.agregarLeccion(new Leccion("/se.gif", "/audios/se.wav", "se")); //falta
-        lista4.agregarLeccion(new Leccion("/ko.gif", "/audios/ko.wav", "ko")); //falta
-        lista4.agregarLeccion(new Leccion("/so.gif", "/audios/so.wav", "so")); //falta
+        lista4.agregarLeccion(new Leccion("/gifs_s/su.gif", "/vocales con s-/su.wav", "su")); //cambiar y agregar lecciones (su, ke, se, ko, so)
+        lista4.agregarLeccion(new Leccion("/gifs_k/ke.gif", "/vocales con k-/ke.wav", "ke")); //falta
+        lista4.agregarLeccion(new Leccion("/gifs_s/se.gif", "/vocales con s-/se.wav", "se")); //falta
+        lista4.agregarLeccion(new Leccion("/gifs_k/ko.gif", "/vocales con k-/ko.wav", "ko")); //falta
+        lista4.agregarLeccion(new Leccion("/gifs_s/so.gif", "/vocales con s-/so.wav", "so")); //falta
         
         
         

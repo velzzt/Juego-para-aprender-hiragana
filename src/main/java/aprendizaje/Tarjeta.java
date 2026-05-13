@@ -71,13 +71,24 @@ public class Tarjeta extends JPanel {
             //añadimos icono al boton
             btnReproducirAudio.setIcon(new ImageIcon(icon.getImage().getScaledInstance(btnReproducirAudio.getWidth(), btnReproducirAudio.getHeight(), Image.SCALE_SMOOTH)));
             btnReproducirAudio.setAlignmentX(CENTER_ALIGNMENT);
+            
+            //Eliminar el borde que aparece al hacer click
+            btnReproducirAudio.setFocusPainted(false);
+                        
+            //Evento de reproducir audio
+            Leccion leccionActual = lecciones.get(i);
+            btnReproducirAudio.addActionListener(e -> reproducirSonido(leccionActual.getRutaAudio()));            
+            
             p.add(btnReproducirAudio); //añadimos el boton al panel 'p'
             p.add(Box.createVerticalStrut(40)); //añadimos espacio entre el boton y el label
-
+            
             //ROMAJI muestra como suenan las silabas japonesas) 
             JLabel letra = new JLabel();
             letra.setText(lecciones.get(i).getRomaji());
             letra.setAlignmentX(CENTER_ALIGNMENT);
+            
+            //Diseño de las vocales en español
+            letra.setFont(new java.awt.Font("SansSerif",java.awt.Font.BOLD,35));
 
             p.add(letra);//añadimos el label a 'p'
 
@@ -99,6 +110,24 @@ public class Tarjeta extends JPanel {
         if(indiceActual>0){
             indiceActual--;
             card.show(this, "tarjeta"+indiceActual);
+        }
+    }
+    
+    //Metodo para reproducir el audio
+    private void reproducirSonido(String rutaAudio) {
+        try {
+            URL url = getClass().getResource(rutaAudio);
+            if (url != null) {
+                javax.sound.sampled.AudioInputStream ais = javax.sound.sampled.AudioSystem.getAudioInputStream(url);
+                javax.sound.sampled.Clip clip = javax.sound.sampled.AudioSystem.getClip();
+                clip.open(ais);
+                clip.start();
+            } else {
+                System.out.println("No se encontró el archivo de audio: " + rutaAudio);
+            }
+        } catch (Exception ex) {
+            System.out.println("Error al reproducir audio.");
+            ex.printStackTrace();
         }
     }
 }
