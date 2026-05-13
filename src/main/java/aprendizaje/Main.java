@@ -4,7 +4,6 @@
  */
 package aprendizaje;
 
-import juego.HiraganaEnemigo;
 
 /**
  *

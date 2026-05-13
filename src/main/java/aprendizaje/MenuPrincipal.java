@@ -18,7 +18,7 @@ Leccion -> ListaLeccion -> MenuPrincipal -> PanelAprender -> PanelLeccion -> Tar
 public class MenuPrincipal extends JFrame {
 
     public JPanel panel;
-    private ListaLeccion lista1,lista2,lista3,lista4, lista5;
+    private ListaLeccion lista1,lista2,lista3,lista4;
     
     public MenuPrincipal(){
 
@@ -96,6 +96,7 @@ public class MenuPrincipal extends JFrame {
 
         lista1=new ListaLeccion();
         lista1.agregarLeccion(new Leccion("/a.gif", "/audio/a.wav", "a")); //agregar lecciones (a, i , u)
+        lista1.agregarLeccion(new Leccion("/u.gif", "/audio/u.wav", "u"));
 
         lista2=new ListaLeccion();
         lista2.agregarLeccion(new Leccion("/e.gif", "/audio/e.wav", "e")); //cambiar y agregar lecciones (e, o, ka)
@@ -106,8 +107,8 @@ public class MenuPrincipal extends JFrame {
         lista4=new ListaLeccion();
         lista4.agregarLeccion(new Leccion("/o.gif", "/audio/o.wav", "o")); //cambiar y agregar lecciones (su, ke, se, ko, so)
         
-        lista5=new ListaLeccion();
-        lista5.agregarLeccion(new Leccion("/u.gif", "/audio/u.wav", "u"));
+        
+        
     }
 
 

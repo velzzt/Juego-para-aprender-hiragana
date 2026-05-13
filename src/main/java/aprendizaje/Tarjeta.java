@@ -19,7 +19,7 @@ public class Tarjeta extends JPanel {
 
     private CardLayout card;
     private List<Leccion> lecciones; //lista que guarda objetos de tipo Leccion
-
+    private int indiceActual=1;
     public Tarjeta(List<Leccion> lecciones) {
         this.lecciones = lecciones;
 
@@ -82,17 +82,24 @@ public class Tarjeta extends JPanel {
 
             p.add(letra);//añadimos el label a 'p'
 
-            add(p, "tarjeta " + (i + 1)); //agregamos el panel 'p' a Tarjeta
+            add(p, "tarjeta" + (i + 1)); //agregamos el panel 'p' a Tarjeta
         }
 
     }
 
     //metodos que permiten cambiar de tarjetas
     public void mostrarSiguiente() {
-        card.next(this);
+       if(indiceActual<lecciones.size()){
+        indiceActual++;
+        card.show(this, "tarjeta"+indiceActual);
+       }
+
     }
 
     public void mostrarAnterior() {
-        card.previous(this);
+        if(indiceActual>0){
+            indiceActual--;
+            card.show(this, "tarjeta"+indiceActual);
+        }
     }
 }
