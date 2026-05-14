@@ -138,9 +138,9 @@ public class PanelRepaso extends JPanel {
     private void mostrarPregunta() {
 
         ImageIcon icono = new ImageIcon(
-                getClass().getResource("/" + preguntas[indice][0])
+                getClass().getResource("/letras_png/" + preguntas[indice][0])
         );
-
+        
         Image imagen = icono.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
 
         lblPregunta.setIcon(new ImageIcon(imagen));
