@@ -19,7 +19,8 @@ public class Tarjeta extends JPanel {
 
     private CardLayout card;
     private List<Leccion> lecciones; //lista que guarda objetos de tipo Leccion
-    private int indiceActual=1;
+    private int indiceActual = 1;
+
     public Tarjeta(List<Leccion> lecciones) {
         this.lecciones = lecciones;
 
@@ -71,24 +72,24 @@ public class Tarjeta extends JPanel {
             //añadimos icono al boton
             btnReproducirAudio.setIcon(new ImageIcon(icon.getImage().getScaledInstance(btnReproducirAudio.getWidth(), btnReproducirAudio.getHeight(), Image.SCALE_SMOOTH)));
             btnReproducirAudio.setAlignmentX(CENTER_ALIGNMENT);
-            
+
             //Eliminar el borde que aparece al hacer click
             btnReproducirAudio.setFocusPainted(false);
-                        
+
             //Evento de reproducir audio
             Leccion leccionActual = lecciones.get(i);
-            btnReproducirAudio.addActionListener(e -> reproducirSonido(leccionActual.getRutaAudio()));            
-            
+            btnReproducirAudio.addActionListener(e -> reproducirSonido(leccionActual.getRutaAudio()));
+
             p.add(btnReproducirAudio); //añadimos el boton al panel 'p'
             p.add(Box.createVerticalStrut(40)); //añadimos espacio entre el boton y el label
-            
+
             //ROMAJI muestra como suenan las silabas japonesas) 
             JLabel letra = new JLabel();
             letra.setText(lecciones.get(i).getRomaji());
             letra.setAlignmentX(CENTER_ALIGNMENT);
-            
+
             //Diseño de las vocales en español
-            letra.setFont(new java.awt.Font("SansSerif",java.awt.Font.BOLD,35));
+            letra.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 35));
 
             p.add(letra);//añadimos el label a 'p'
 
@@ -99,20 +100,25 @@ public class Tarjeta extends JPanel {
 
     //metodos que permiten cambiar de tarjetas
     public void mostrarSiguiente() {
-       if(indiceActual<lecciones.size()){
-        indiceActual++;
-        card.show(this, "tarjeta"+indiceActual);
-       }
+        if (indiceActual < lecciones.size()) {
+            indiceActual++;
+            card.show(this, "tarjeta" + indiceActual);
+        }
 
     }
 
     public void mostrarAnterior() {
-        if(indiceActual>0){
+        if (indiceActual > 0) {
             indiceActual--;
-            card.show(this, "tarjeta"+indiceActual);
+            card.show(this, "tarjeta" + indiceActual);
         }
     }
-    
+
+    // Verifica si ya se llegó a la última tarjeta
+    public boolean esUltimaTarjeta() {
+        return indiceActual >= lecciones.size();
+    }
+
     //Metodo para reproducir el audio
     private void reproducirSonido(String rutaAudio) {
         try {
