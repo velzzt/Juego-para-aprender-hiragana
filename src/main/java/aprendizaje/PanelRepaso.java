@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import javax.swing.SwingConstants;
@@ -24,7 +25,7 @@ import javax.swing.SwingConstants;
 public class PanelRepaso extends JPanel {
 
     private MenuPrincipal menu;
-
+    private int seccionActual;
     private JLabel lblPregunta;
 
     private JButton btnOpcion1;
@@ -40,10 +41,10 @@ public class PanelRepaso extends JPanel {
     public PanelRepaso(MenuPrincipal menu, int numeroBoton) {
 
         this.menu = menu;
-
+        this.seccionActual=numeroBoton;
         setLayout(new BorderLayout(20, 20));
 
-        // Hiragama 1
+        // Hiragana 1
         if (numeroBoton == 1) {
 
             preguntas = new String[][]{
@@ -53,7 +54,7 @@ public class PanelRepaso extends JPanel {
             };
         }
 
-        // Hiragama 2
+        // Hiragana 2
         if (numeroBoton == 2) {
 
             preguntas = new String[][]{
@@ -62,6 +63,30 @@ public class PanelRepaso extends JPanel {
                 {"ka.png", "i", "ka", "o", "e", "ka"}// la respues correcta es ka
             };
         }
+
+         // Hiragana 3
+        if (numeroBoton == 3) {
+
+            preguntas = new String[][]{
+                {"sa.png", "si ", "sa", "su", "se", "sa"},// la respuesta correcta es a
+                {"ki.png", "ku", "sa", "ki", "o", "ki"},// la respuedsta correcta es i
+                {"shi.png", "se", "u", "so", "shi", "shi"},// la respuesta correcta es u
+                {"ku.png", "ke", "u", "ku", "shi", "ku"}// la respuesta correcta es u
+            };
+        }
+
+        // Hiragana 4
+        if (numeroBoton == 4) {
+
+            preguntas = new String[][]{
+                {"su.png", "su", "ka", "so", "ko", "su"},// la respuesta correcta es e
+                {"ke.png", "ke", "su", "ka", "o", "ke"},// la respuesta correcta es o
+                {"se.png", "i", "se", "ke", "ka", "se"},// la respuesta correcta es ka
+                {"ko.png", "ki", "ko", "shi", "ke", "ko"},// la respues correcta es ka
+                {"so.png", "ki", "su", "so", "se", "so"}// la respues correcta es ka
+            };
+        }
+
 
         iniciarComponentes();
 
@@ -124,6 +149,10 @@ public class PanelRepaso extends JPanel {
 
                         mostrarFinal();
                     }
+                //si se marca la alternativa incorrecta se reinicia
+                }else{ 
+                    
+                    mensajeIntentalo();
                 }
             }
         };
@@ -149,6 +178,36 @@ public class PanelRepaso extends JPanel {
         btnOpcion2.setText(preguntas[indice][2]);
         btnOpcion3.setText(preguntas[indice][3]);
         btnOpcion4.setText(preguntas[indice][4]);
+    }
+
+    private void mensajeIntentalo(){
+        removeAll();
+
+        setLayout(new BorderLayout());
+
+        JLabel lblFinal = new JLabel("¡Inténtalo otra vez!", SwingConstants.CENTER);
+        lblFinal.setFont(new Font("SansSerif", Font.BOLD, 40));
+
+        JButton volver = new JButton("Volver");
+
+        volver.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PanelRepaso repaso = new PanelRepaso(menu, seccionActual);
+                removeAll();
+                add(repaso);
+                revalidate();
+                repaint();
+              
+            }
+        });
+
+        add(lblFinal, BorderLayout.CENTER);
+        add(volver, BorderLayout.SOUTH);
+
+        revalidate();
+        repaint();
     }
 
     // Pantalla final del repaso

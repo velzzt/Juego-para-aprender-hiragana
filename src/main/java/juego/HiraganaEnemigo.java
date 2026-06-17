@@ -6,7 +6,9 @@ import javax.swing.*;
 
 public class HiraganaEnemigo extends JPanel implements ActionListener{
 	
-	private String[]caracteres= {"あ","い","う","え","お"};
+	private String[]caracteres= {"あ","い","う","え","お","か","き","く","け","こ",
+								"さ","し","す","せ","そ"
+	};
 	private String caracterSeleccionado;
 	private int x; //posición inicial del rectangulo en el eje x
 	private int y; //posicion inicial del rectangulo en el eje y
