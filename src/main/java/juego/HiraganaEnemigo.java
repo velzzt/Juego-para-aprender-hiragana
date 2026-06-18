@@ -17,7 +17,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener{
 	
 	Timer temporizador;
 	int velocidad=3;
-	
+	int vidas=3;
 	//Metodo que determina una posicion aleatoria al rectangulo (en el border derecho)
 	public void asignarPosicionRect() {
 		x=getWidth()-anchoRect;
@@ -75,7 +75,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener{
 		if (x+anchoRect<0) {
 			asignarPosicionRect(); //nueva posicion
 			asignarCaracter(); //nuevo caracter aleatorio
-			
+
 		}
 		repaint();
 		
