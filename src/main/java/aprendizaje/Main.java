@@ -13,6 +13,8 @@ public class Main {
 
  
     public static void main(String[] args) {
+        Sonido.precargar();
+
         MenuPrincipal menu = new MenuPrincipal();
         menu.setVisible(true);
         
