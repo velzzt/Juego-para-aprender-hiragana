@@ -11,33 +11,34 @@ public class panelPausa extends JPanel {
 
     public panelPausa(HiraganaEnemigo juego, JFrame frame, MenuPrincipal menu) {
         this.juego = juego;
-        setOpaque(false);
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // apila verticalmente
+        //setOpaque(false);
+        setLayout(new GridBagLayout()); 
+        setBackground(new Color(0, 0, 0, 180)); // fondo semitransparente
         iniciarComponentes();
     }
 
     private void iniciarComponentes() {
-        add(Box.createVerticalGlue());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(15, 15, 15, 15);
+        gbc.anchor = GridBagConstraints.CENTER;
+
 
         // Botón Continuar
+        gbc.gridy = 1;
         JButton btnContinuar = new JButton("Continuar");
         btnContinuar.setFont(new Font("Arial", Font.BOLD, 28));
         btnContinuar.setPreferredSize(new Dimension(220, 70));
-        btnContinuar.setMaximumSize(new Dimension(220, 70));
-        btnContinuar.setAlignmentX(CENTER_ALIGNMENT);
         btnContinuar.addActionListener(e -> juego.continuarJuego());
-        add(btnContinuar);
-        add(Box.createRigidArea(new Dimension(0, 15)));
+        add(btnContinuar, gbc);
 
         // Botón Volver al Menú
+        gbc.gridy = 2;
         JButton btnMenu = new JButton("Volver al Menú");
         btnMenu.setFont(new Font("Arial", Font.BOLD, 28));
         btnMenu.setPreferredSize(new Dimension(300, 70));
-        btnMenu.setMaximumSize(new Dimension(300, 70));
-        btnMenu.setAlignmentX(CENTER_ALIGNMENT);
         btnMenu.addActionListener(e -> juego.volverMenu());
-        add(btnMenu);
-
-        add(Box.createVerticalGlue());
+        add(btnMenu, gbc);
     }
 }
