@@ -166,7 +166,8 @@ public class PanelNarrativa extends javax.swing.JPanel {
             if (nombreIngresado.isEmpty()) {
                 nombreIngresado = "Héroe";
             }
-            ventanaPrincipal.iniciarJuegoConfirmado(nombreIngresado, indiceFondo);
+            String rutaFondo = imagenesFondo[indiceFondo];
+            ventanaPrincipal.iniciarJuegoConfirmado(nombreIngresado, rutaFondo);
         });
     }
 
