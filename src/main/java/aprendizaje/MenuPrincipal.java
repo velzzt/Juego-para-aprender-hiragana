@@ -25,7 +25,8 @@ public class MenuPrincipal extends JFrame {
     public MenuPrincipal() {
 
         setSize(1280, 800);
-        //setResizable(false);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setResizable(false);
         setTitle("Aprender hiragana");
         setDefaultCloseOperation(EXIT_ON_CLOSE); //para terminar el proceso 
         setLocationRelativeTo(null); //ventana en el centro de la pantalla
@@ -50,20 +51,20 @@ public class MenuPrincipal extends JFrame {
         //Coloca los componentes(label,botones) a 'panel'
 
         JLabel titulo = new JLabel("Aprende Hiragana");
-        titulo.setBounds(390, 150, 500, 80); //asignamos posicion y tamaño
+        titulo.setBounds(530, 150, 500, 80); //asignamos posicion y tamaño
         titulo.setHorizontalAlignment(SwingConstants.CENTER); //Centramos el texto en el label
         titulo.setFont(new Font("SansSerif", Font.BOLD, 50)); //en estilos puede ser 0,1,2,3 en vez de usar  Font.BOLD O Font.ITALIC, etc
         panel.add(titulo); //agregamos a 'panel'
 
         //Boton Apreder
         JButton btnAprender = new JButton("Aprender");
-        btnAprender.setBounds(540, 350, 200, 40); //asignamos posicion y tamaño
+        btnAprender.setBounds(670, 350, 200, 40); //asignamos posicion y tamaño
         btnAprender.setFocusPainted(false);
         panel.add(btnAprender); //agregamos a 'panel'
 
         //Boton Jugar
         JButton btnJugar = new JButton("Jugar");
-        btnJugar.setBounds(540, 450, 200, 40); //asignamos posicion y tamaño
+        btnJugar.setBounds(670, 450, 200, 40); //asignamos posicion y tamaño
         btnJugar.setFocusPainted(false);
         panel.add(btnJugar); //agregamos a 'panel'
 

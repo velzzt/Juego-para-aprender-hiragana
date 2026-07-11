@@ -43,7 +43,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
     private int contadorError = 0;
 
     private int contadorTicks = 0;
-    private final int INTERVALO_APARICION = 220; // 3 segundos
+    private int INTERVALO_APARICION = 300; // segundos
 
     // Constructor
     public HiraganaEnemigo(JFrame frame, String rutaFondo, MenuPrincipal menu) {
@@ -87,7 +87,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         });
     }
 
-    // --- Obtener romaji ---
+    // Obtener romaji
     private String obtenerRomaji(String c) {
         for (int i = 0; i < caracteres.length; i++) {
             if (caracteres[i].equals(c)) return romajiList[i];
@@ -95,7 +95,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         return "";
     }
 
-    // --- Agregar nuevo carácter según el nivel ---
+    // Agregar nuevo carácter según el nivel
     private void agregarCaracter() {
         if (vidas <= 0 || cantidad >= 20) return;
 
@@ -129,7 +129,6 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         if (fondoImagen != null) {
             g2d.drawImage(fondoImagen, 0, 0, getWidth(), getHeight(), this);
         } else {
-            // Fallback: fondo negro si no se carga la imagen
             g2d.setColor(Color.BLACK);
             g2d.fillRect(0, 0, getWidth(), getHeight());
         }
@@ -150,7 +149,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
             g2d.drawString(chars[i], cx, cy);
         }
 
-        // --- Puntuación centrada arriba (tamaño grande) ---
+        // Puntuación centrada
         g2d.setFont(new Font("Monospaced", Font.BOLD, 48));
         g2d.setColor(Color.WHITE);
         String textoPuntaje = "Puntuación: " + puntaje;
@@ -168,11 +167,11 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
             dibujarCorazon(g2d, corX + i * (anchoCorazon + separacion), corY, pixelSize);
         }
 
-        // Mostrar nivel y aciertos (info opcional)
+        // Mostrar nivel
         g2d.setFont(new Font("Monospaced", Font.BOLD, 20));
         g2d.setColor(Color.WHITE);
         g2d.drawString("Nivel: " + nivel, getWidth() - 150, 30);
-        g2d.drawString("Aciertos: " + aciertos, getWidth() - 150, 60);
+        
 
         // Mensaje de pausa
         if (pausado && !juegoTerminado) {
@@ -198,7 +197,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         }
     }
 
-    // --- Lógica del temporizador ---
+    // Lógica del temporizador
     @Override
     public void actionPerformed(ActionEvent e) {
         if (juegoTerminado || pausado) {
@@ -249,13 +248,13 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         }
     }
 
-    // --- Reiniciar juego ---
+    // Reiniciar juego 
     public void reiniciarJuego() {
         vidas = 3;
         puntaje = 0;
         nivel = 1;
         aciertos = 0;
-        velocidad = 3;
+        velocidad = 2;
         contadorTicks = 0;
         entradaActual.setLength(0);
         contadorError = 0;
@@ -271,11 +270,9 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
     public void volverMenu() {
     temporizador.stop();
     if (menu != null) {
-        // Restaurar el menú original usando su método mostrarMenu()
         menu.mostrarMenu();
-        menu.requestFocusInWindow(); // forzar foco
+        menu.requestFocusInWindow(); 
     } else {
-        // Fallback: si no hay referencia, crear uno nuevo (pero esto no debería ocurrir)
         if (frameContenedor != null) {
             MenuPrincipal menu = new MenuPrincipal();
             frameContenedor.getContentPane().removeAll();
@@ -305,7 +302,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         {0, 0, 0, 0, 0, 0, 0, 0}
     };
 
-    // Método para dibujar un corazón en posición (x, y) con cierto tamaño de píxel
+    // Método para dibujar un corazón estilo pixelado
     private void dibujarCorazon(Graphics2D g2d, int x, int y, int pixelSize) {
         for (int fila = 0; fila < CORAZON.length; fila++) {
             for (int col = 0; col < CORAZON[fila].length; col++) {
@@ -319,7 +316,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         }
     }
 
-    // --- Manejo de teclado ---
+    // Manejo de teclado
     @Override
     public void keyTyped(KeyEvent e) {
         if (juegoTerminado || pausado) return;
@@ -354,14 +351,18 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
 
                 // Verificar cambio de nivel
                 if (nivel == 1 && aciertos >= ACIERTOS_NIVEL_2) {
+                    INTERVALO_APARICION = 200;
                     nivel = 2;
-                    velocidad = 5;
+                    velocidad = 4;
                     aciertos = 0;
+                    contadorTicks = 0;
                     System.out.println("¡Nivel 2! Velocidad: " + velocidad);
                 } else if (nivel == 2 && aciertos >= ACIERTOS_NIVEL_3) {
+                    INTERVALO_APARICION = 180;
                     nivel = 3;
                     velocidad = 7;
                     aciertos = 0;
+                    contadorTicks = 0;
                     System.out.println("¡Nivel 3! Velocidad: " + velocidad);
                 }
                 break;
