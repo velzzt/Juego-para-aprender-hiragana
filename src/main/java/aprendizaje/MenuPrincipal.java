@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import juego.HiraganaEnemigo;
 
 /*
 
@@ -24,6 +25,7 @@ public class MenuPrincipal extends JFrame {
     public MenuPrincipal() {
 
         setSize(1280, 800);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
         setTitle("Aprender hiragana");
         setDefaultCloseOperation(EXIT_ON_CLOSE); //para terminar el proceso 
@@ -49,20 +51,20 @@ public class MenuPrincipal extends JFrame {
         //Coloca los componentes(label,botones) a 'panel'
 
         JLabel titulo = new JLabel("Aprende Hiragana");
-        titulo.setBounds(390, 150, 500, 80); //asignamos posicion y tamaño
+        titulo.setBounds(530, 150, 500, 80); //asignamos posicion y tamaño
         titulo.setHorizontalAlignment(SwingConstants.CENTER); //Centramos el texto en el label
         titulo.setFont(new Font("SansSerif", Font.BOLD, 50)); //en estilos puede ser 0,1,2,3 en vez de usar  Font.BOLD O Font.ITALIC, etc
         panel.add(titulo); //agregamos a 'panel'
 
         //Boton Apreder
         JButton btnAprender = new JButton("Aprender");
-        btnAprender.setBounds(540, 350, 200, 40); //asignamos posicion y tamaño
+        btnAprender.setBounds(670, 350, 200, 40); //asignamos posicion y tamaño
         btnAprender.setFocusPainted(false);
         panel.add(btnAprender); //agregamos a 'panel'
 
         //Boton Jugar
         JButton btnJugar = new JButton("Jugar");
-        btnJugar.setBounds(540, 450, 200, 40); //asignamos posicion y tamaño
+        btnJugar.setBounds(670, 450, 200, 40); //asignamos posicion y tamaño
         btnJugar.setFocusPainted(false);
         panel.add(btnJugar); //agregamos a 'panel'
 
@@ -160,16 +162,18 @@ public class MenuPrincipal extends JFrame {
     }
 
     // Adopta los datos ingresados para empezar el juego
-    public void iniciarJuegoConfirmado(String nombre, int trajeSeleccionado) {
-        
-        System.out.println("Iniciando partida para: " + nombre + " con traje ID: " + trajeSeleccionado);
+    // En MenuPrincipal.java
+public void iniciarJuegoConfirmado(String nombre, String rutaFondo) {
+    System.out.println("Iniciando partida para: " + nombre + " con fondo: " + rutaFondo);
+    HiraganaEnemigo ah = new HiraganaEnemigo(this, rutaFondo, this); // pasa this
+    getContentPane().removeAll();
+    getContentPane().add(ah);
+    getContentPane().revalidate();
+    getContentPane().repaint();
+    ah.requestFocusInWindow();
+}
 
-        // Ejecuta el código original para iniciar el juego
-        HiraganaEnemigo ah = new HiraganaEnemigo();
-        getContentPane().removeAll();
-        getContentPane().add(ah);
-        getContentPane().revalidate();
-        getContentPane().repaint();
-    }
-
+    public JPanel getPanel() {
+    return panel;
+}
 }
