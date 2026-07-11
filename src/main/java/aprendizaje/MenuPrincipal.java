@@ -13,6 +13,9 @@ import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+import juego.HiraganaEnemigo;
+
 /*
 
 Para entender el codigo recomiendo leer en el siguiente orden:
@@ -44,6 +47,7 @@ public class MenuPrincipal extends JFrame {
     public MenuPrincipal() {
 
         setSize(1280, 800);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
         setTitle("Aprender hiragana");
         setDefaultCloseOperation(EXIT_ON_CLOSE); // para terminar el proceso
@@ -322,16 +326,18 @@ public class MenuPrincipal extends JFrame {
     }
 
     // Adopta los datos ingresados para empezar el juego
-    public void iniciarJuegoConfirmado(String nombre, int trajeSeleccionado) {
+    // En MenuPrincipal.java
+public void iniciarJuegoConfirmado(String nombre, String rutaFondo) {
+    System.out.println("Iniciando partida para: " + nombre + " con fondo: " + rutaFondo);
+    HiraganaEnemigo ah = new HiraganaEnemigo(this, rutaFondo, this); // pasa this
+    getContentPane().removeAll();
+    getContentPane().add(ah);
+    getContentPane().revalidate();
+    getContentPane().repaint();
+    ah.requestFocusInWindow();
+}
 
-        System.out.println("Iniciando partida para: " + nombre + " con traje ID: " + trajeSeleccionado);
-
-        // Ejecuta el código original para iniciar el juego
-        HiraganaEnemigo ah = new HiraganaEnemigo();
-        getContentPane().removeAll();
-        getContentPane().add(ah);
-        getContentPane().revalidate();
-        getContentPane().repaint();
-    }
-
+    public JPanel getPanel() {
+    return panel;
+}
 }
