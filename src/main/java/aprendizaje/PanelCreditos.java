@@ -30,45 +30,83 @@ public class PanelCreditos extends JPanel {
         panelSuperior.add(btnVolver);
         add(panelSuperior, BorderLayout.NORTH);
 
-        // --- Panel central con GridBagLayout para centrar el texto ---
-        JPanel panelCentral = new JPanel(new GridBagLayout());
+        // --- Panel central con BoxLayout para apilar líneas centradas ---
+        JPanel panelCentral = new JPanel();
+        panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
         panelCentral.setOpaque(false);
+        panelCentral.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // Área de texto con los créditos en cascada
-        JTextArea txtCreditos = new JTextArea();
-        txtCreditos.setEditable(false);
-        txtCreditos.setOpaque(false);
-        txtCreditos.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
-        txtCreditos.setForeground(Color.WHITE);
-        txtCreditos.setBorder(new EmptyBorder(20, 20, 20, 20)); // margen interno opcional
+        // Añadir un "glue" para centrar verticalmente el contenido
+        panelCentral.add(Box.createVerticalGlue());
 
-        String creditos =
-            "  THE DEVELOPMENT TEAM\n\n" +
-            "  Producer and Project Director\n" +
-            "  Warren Spector\n\n" +
-            "  Lead Programmer and Assistant Director\n" +
-            "  Chris Norden\n\n" +
-            "  Programmers\n" +
-            "  Scott Martin\n" +
-            "  Albert Yarussu\n\n" +
-            "  Lead Designer";
+        // Línea 1: Título en amarillo
+        JLabel lblTitulo = new JLabel("EL EQUIPO DE DESARROLLO");
+        lblTitulo.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+        lblTitulo.setForeground(Color.YELLOW);
+        lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(lblTitulo);
+        panelCentral.add(Box.createVerticalStrut(20));
 
-        txtCreditos.setText(creditos);
-        // Ajusta el tamaño preferido para que no se estire demasiado
-        txtCreditos.setPreferredSize(new Dimension(500, 800));
+        // Línea 2: "Programmers" en amarillo
+        JLabel lblProgrammers = new JLabel("Programación");
+        lblProgrammers.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+        lblProgrammers.setForeground(Color.YELLOW);
+        lblProgrammers.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(lblProgrammers);
+        panelCentral.add(Box.createVerticalStrut(10));
 
-        // Centrar el JTextArea en el panelCentral usando GridBagConstraints
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        panelCentral.add(txtCreditos, gbc);
+        // Nombres de programadores en blanco
+        String[] programadores = {"Elizabet Quispe", "Franco Donayre", "Leonardo Arellan", "Jack Hilario"};
+        for (String nombre : programadores) {
+            JLabel lbl = new JLabel(nombre);
+            lbl.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+            lbl.setForeground(Color.WHITE);
+            lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panelCentral.add(lbl);
+        }
+        panelCentral.add(Box.createVerticalStrut(20));
+
+        // Línea "Design" en amarillo
+        JLabel lblDesign = new JLabel("Diseño");
+        lblDesign.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+        lblDesign.setForeground(Color.YELLOW);
+        lblDesign.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(lblDesign);
+        panelCentral.add(Box.createVerticalStrut(10));
+
+        // Nombres de diseñadores en blanco
+        String[] disenadores = {"Franco Donayre", "Leonardo Arellan"};
+        for (String nombre : disenadores) {
+            JLabel lbl = new JLabel(nombre);
+            lbl.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+            lbl.setForeground(Color.WHITE);
+            lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panelCentral.add(lbl);
+        }
+        panelCentral.add(Box.createVerticalStrut(20));
+
+        // Línea "Narrativa" en amarillo
+        JLabel lblNarrativa = new JLabel("Narrativa");
+        lblNarrativa.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+        lblNarrativa.setForeground(Color.YELLOW);
+        lblNarrativa.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(lblNarrativa);
+        panelCentral.add(Box.createVerticalStrut(10));
+
+        // Nombre de narrador en blanco
+        JLabel lblNarrativa1 = new JLabel("Jack Hilario");
+        lblNarrativa1.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+        lblNarrativa1.setForeground(Color.WHITE);
+        lblNarrativa1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(lblNarrativa1);
+
+        // Añadir otro "glue" para centrar verticalmente
+        panelCentral.add(Box.createVerticalGlue());
 
         // Añadir el panel central al centro del BorderLayout
         add(panelCentral, BorderLayout.CENTER);
     }
+
     private JButton crearBotonVolver() {
         JButton btn = new JButton();
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
