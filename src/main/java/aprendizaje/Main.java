@@ -3,21 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package aprendizaje;
-
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author Elizabet
  */
+
+
+
+
 public class Main {
 
- 
     public static void main(String[] args) {
-        Sonido.precargar();
 
-        MenuPrincipal menu = new MenuPrincipal();
-        menu.setVisible(true);
-        
+        SwingUtilities.invokeLater(() -> {
+            new MenuPrincipal();
+        });
+
     }
-    
+
 }

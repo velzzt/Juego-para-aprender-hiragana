@@ -1,9 +1,13 @@
 package aprendizaje;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -20,9 +24,13 @@ public class Tarjeta extends JPanel {
     private CardLayout card;
     private List<Leccion> lecciones; //lista que guarda objetos de tipo Leccion
     private int indiceActual = 1;
+    private final boolean usarBotonPlay;
+    private final Font fuentePixel;
 
-    public Tarjeta(List<Leccion> lecciones) {
+    public Tarjeta(List<Leccion> lecciones, boolean usarBotonPlay) {
         this.lecciones = lecciones;
+        this.usarBotonPlay = usarBotonPlay;
+        this.fuentePixel = cargarFuentePixel();
 
         card = new CardLayout(); //creamos el CardLayout
         setLayout(card); // le asignamos un layout de tipo CardLayout a Tarjeta
@@ -67,10 +75,7 @@ public class Tarjeta extends JPanel {
 
             //AUDIO
             JButton btnReproducirAudio = new JButton();
-            btnReproducirAudio.setSize(80, 40); //asignamos tamaño
-            ImageIcon icon = new ImageIcon("play_icon.png"); //creamos una imagen que usaremos como icono del boton
-            //añadimos icono al boton
-            btnReproducirAudio.setIcon(new ImageIcon(icon.getImage().getScaledInstance(btnReproducirAudio.getWidth(), btnReproducirAudio.getHeight(), Image.SCALE_SMOOTH)));
+            configurarBotonAudio(btnReproducirAudio);
             btnReproducirAudio.setAlignmentX(CENTER_ALIGNMENT);
 
             //Eliminar el borde que aparece al hacer click
@@ -89,7 +94,8 @@ public class Tarjeta extends JPanel {
             letra.setAlignmentX(CENTER_ALIGNMENT);
 
             //Diseño de las vocales en español
-            letra.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 35));
+            letra.setFont(fuentePixel.deriveFont(Font.PLAIN, 35f));
+            letra.setForeground(Color.BLACK);
 
             p.add(letra);//añadimos el label a 'p'
 
@@ -111,6 +117,86 @@ public class Tarjeta extends JPanel {
         if (indiceActual > 0) {
             indiceActual--;
             card.show(this, "tarjeta" + indiceActual);
+        }
+    }
+
+    private void configurarBotonAudio(JButton boton) {
+        Dimension tamano = usarBotonPlay
+                ? new Dimension(180, 120)
+                : new Dimension(80, 40);
+
+        boton.setPreferredSize(tamano);
+        boton.setMinimumSize(tamano);
+        boton.setMaximumSize(tamano);
+        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        boton.setFocusPainted(false);
+
+        if (!usarBotonPlay) {
+            return;
+        }
+
+        ImageIcon iconoNormal = cargarIconoPlay(
+                "/menu/boton_play.png",
+                tamano
+        );
+        ImageIcon iconoHover = cargarIconoPlay(
+                "/menu/boton_play_hover.png",
+                tamano
+        );
+
+        if (iconoNormal == null) {
+            boton.setText("Reproducir");
+            return;
+        }
+
+        boton.setIcon(iconoNormal);
+        if (iconoHover != null) {
+            boton.setRolloverIcon(iconoHover);
+            boton.setPressedIcon(iconoHover);
+            boton.setRolloverEnabled(true);
+        }
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);
+        boton.setOpaque(false);
+    }
+
+    private ImageIcon cargarIconoPlay(String ruta, Dimension tamano) {
+        URL recurso = getClass().getResource(ruta);
+        if (recurso == null) {
+            return null;
+        }
+
+        ImageIcon original = new ImageIcon(recurso);
+        Image imagenEscalada = original.getImage().getScaledInstance(
+                tamano.width,
+                tamano.height,
+                Image.SCALE_SMOOTH
+        );
+        return new ImageIcon(imagenEscalada);
+    }
+
+    private Font cargarFuentePixel() {
+        try (InputStream fuenteStream = getClass().getResourceAsStream(
+                "/fuentes/PixelOperator.ttf")) {
+
+            if (fuenteStream != null) {
+                return Font.createFont(Font.TRUETYPE_FONT, fuenteStream);
+            }
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar PixelOperator en Tarjeta.");
+        }
+
+        return new Font(Font.MONOSPACED, Font.BOLD, 35);
+    }
+
+    /** Hace transparentes la tarjeta y sus vistas para mostrar el fondo de la unidad. */
+    public void setFondoTransparente() {
+        setOpaque(false);
+
+        for (Component componente : getComponents()) {
+            if (componente instanceof JPanel panel) {
+                panel.setOpaque(false);
+            }
         }
     }
 

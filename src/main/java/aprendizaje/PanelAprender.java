@@ -3,7 +3,9 @@ package aprendizaje;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -13,18 +15,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 public class PanelAprender extends JPanel {
 
     private MenuPrincipal menuPanel;
+    private BufferedImage imagenFondo;
+    private BufferedImage imagenFondoEscalada;
+    private int anchoFondoEscalado = -1;
+    private int altoFondoEscalado = -1;
+    private Font fuentePixel;
 
     //menuPanel es la referencia del MenuPrincipal
     public PanelAprender(MenuPrincipal menuPanel) {
@@ -34,7 +40,63 @@ public class PanelAprender extends JPanel {
         setLayout(new BorderLayout(20, 20));
         setBackground(new Color(220, 240, 220));
         setBorder(new EmptyBorder(30, 40, 40, 40));
+        cargarFondo();
+        fuentePixel = cargarFuentePixel();
         iniciarComponentes();
+    }
+
+    private void cargarFondo() {
+        try {
+            imagenFondo = ImageIO.read(
+                    getClass().getResource("/menu/fondo_aprender.png")
+            );
+        } catch (IOException | IllegalArgumentException e) {
+            imagenFondo = null;
+            System.err.println("No se pudo cargar /menu/fondo_aprender.png");
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (imagenFondo == null || getWidth() <= 0 || getHeight() <= 0) {
+            return;
+        }
+
+        double escala = Math.max(
+                getWidth() / (double) imagenFondo.getWidth(),
+                getHeight() / (double) imagenFondo.getHeight()
+        );
+
+        int ancho = Math.max(1, (int) Math.ceil(imagenFondo.getWidth() * escala));
+        int alto = Math.max(1, (int) Math.ceil(imagenFondo.getHeight() * escala));
+
+        if (imagenFondoEscalada == null
+                || ancho != anchoFondoEscalado
+                || alto != altoFondoEscalado) {
+
+            imagenFondoEscalada = new BufferedImage(
+                    ancho,
+                    alto,
+                    BufferedImage.TYPE_INT_ARGB
+            );
+
+            Graphics2D g2Escala = imagenFondoEscalada.createGraphics();
+            g2Escala.setRenderingHint(
+                    RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BICUBIC
+            );
+            g2Escala.drawImage(imagenFondo, 0, 0, ancho, alto, null);
+            g2Escala.dispose();
+
+            anchoFondoEscalado = ancho;
+            altoFondoEscalado = alto;
+        }
+
+        int x = (getWidth() - ancho) / 2;
+        int y = (getHeight() - alto) / 2;
+        g.drawImage(imagenFondoEscalada, x, y, this);
     }
 
     private void iniciarComponentes() {
@@ -42,10 +104,13 @@ public class PanelAprender extends JPanel {
     }
 
     private void colocarComponentes() {
-        JLabel titulo = new JLabel("Selecciona una unidad", SwingConstants.CENTER);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 36));
-        titulo.setForeground(new Color(20, 90, 45));
-        add(titulo, BorderLayout.NORTH);
+        // Conserva el espacio que antes ocupaba el título, pero sin mostrar
+        // texto. Así los botones mantienen su distribución anterior y no
+        // cubren la parte importante de la zona superior del fondo.
+        JPanel espacioSuperior = new JPanel();
+        espacioSuperior.setOpaque(false);
+        espacioSuperior.setPreferredSize(new Dimension(0, 45));
+        add(espacioSuperior, BorderLayout.NORTH);
 
         // Panel que agrupa todos los botones de las unidades y el botón para volver
         // GridLayout mantiene los 5 botones del mismo alto y los apila con separacion
@@ -55,16 +120,11 @@ public class PanelAprender extends JPanel {
 
         // cada boton recibe un texto interno para la logica y dos sprites para lo visual
         // el primero es el estado normal y el segundo es el estado hover
-        JButton btnHiragana1 = crearBotonEstilizado("Hiragana 1", "/menu/hiragana1.png",
-                "/menu/hiragana1_hover.png");
-        JButton btnHiragana2 = crearBotonEstilizado("Hiragana 2", "/menu/hiragana2.png",
-                "/menu/hiragana2_hover.png");
-        JButton btnHiragana3 = crearBotonEstilizado("Hiragana 3", "/menu/hiragana3.png",
-                "/menu/hiragana3_hover.png");
-        JButton btnHiragana4 = crearBotonEstilizado("Hiragana 4", "/menu/hiragana4.png",
-                "/menu/hiragana4_hover.png");
-        JButton volverMenu = crearBotonEstilizado("Volver al menu principal", "/menu/volver.png",
-                "/menu/volver_hover.png");
+        JButton btnHiragana1 = crearBotonEstilizado("Hiragana 1");
+        JButton btnHiragana2 = crearBotonEstilizado("Hiragana 2");
+        JButton btnHiragana3 = crearBotonEstilizado("Hiragana 3");
+        JButton btnHiragana4 = crearBotonEstilizado("Hiragana 4");
+        JButton volverMenu = crearBotonEstilizado("Volver");
 
         panelBotones.add(btnHiragana1);
         panelBotones.add(btnHiragana2);
@@ -80,6 +140,7 @@ public class PanelAprender extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Sonido.reproducirClick();
+                Sonido.reanudarMusicaMenu();
                 menuPanel.mostrarMenu();
             }
         };
@@ -103,10 +164,7 @@ public class PanelAprender extends JPanel {
                 ListaLeccion lista = menuPanel.obtenerListaLeccion(numero);
                 // Se crea el panel correspondiente a la unidad seleccionada
                 PanelLeccion h1 = new PanelLeccion(menuPanel, lista, numero);
-                menuPanel.getContentPane().removeAll();
-                menuPanel.getContentPane().add(h1);
-                menuPanel.getContentPane().revalidate();
-                menuPanel.getContentPane().repaint();
+                menuPanel.mostrarVista(h1);
             }
         };
 
@@ -117,8 +175,8 @@ public class PanelAprender extends JPanel {
     }
 
     // crea un JButton utilizando sprites para los distintos estados del botón
-    private JButton crearBotonEstilizado(String texto, String rutaNormal, String rutaHover) {
-        JButton btn = new JButton();
+    private JButton crearBotonEstilizado(String texto) {
+        JButton btn = new JButton(texto);
 
         // ActionCommand guarda el nombre del boton aunque no mostremos texto encima del sprite
         btn.setActionCommand(texto);
@@ -130,17 +188,22 @@ public class PanelAprender extends JPanel {
         btn.setBorderPainted(false);
         btn.setOpaque(false);
         btn.setRolloverEnabled(true);
+        btn.setFont(fuentePixel.deriveFont(Font.PLAIN, 25f));
+        btn.setForeground(new Color(82, 48, 29));
+        btn.setHorizontalTextPosition(JButton.CENTER);
+        btn.setVerticalTextPosition(JButton.CENTER);
+        btn.setIconTextGap(0);
 
         //intenta cargar las imágenes personalizadas del botón
         try {
             //todos los botones se dibujan en un lienzo comun para que queden simetricos
-            int anchoBoton = 380;
-            int altoBoton = 80;
+            int anchoBoton = 330;
+            int altoBoton = 110;
 
             //icono normal, icono al pasar el mouse y icono al hacer click
-            btn.setIcon(cargarIconoBoton(rutaNormal, anchoBoton, altoBoton));
-            btn.setRolloverIcon(cargarIconoBoton(rutaHover, anchoBoton, altoBoton));
-            btn.setPressedIcon(cargarIconoBoton(rutaHover, anchoBoton, altoBoton));
+            btn.setIcon(cargarIconoBoton("/menu/boton_inicio.png", anchoBoton, altoBoton));
+            btn.setRolloverIcon(cargarIconoBoton("/menu/boton_hover.png", anchoBoton, altoBoton));
+            btn.setPressedIcon(cargarIconoBoton("/menu/boton_hover.png", anchoBoton, altoBoton));
         } catch (IOException | IllegalArgumentException | NullPointerException e) {
             // fallback, si una imagen falta o la ruta esta mal, aparece un boton clasico
             // asi la navegacion no se rompe mientras ajustas los sprites
@@ -163,17 +226,28 @@ public class PanelAprender extends JPanel {
         // Carga la imagen desde src/main/resources por eso la ruta empieza con "/menu/...".
         BufferedImage imagenOriginal = ImageIO.read(getClass().getResource(ruta));
 
-        // Elimina bordes transparentes antes de escalar para que todos se vean del mismo tamaño
-        BufferedImage spriteRecortado = recortarTransparencia(imagenOriginal);
-
         // Lienzo transparente fijo, normal y hover ocupan exactamente la misma area
         BufferedImage lienzo = new BufferedImage(anchoBoton, altoBoton, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = lienzo.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2.drawImage(spriteRecortado.getScaledInstance(anchoBoton, altoBoton, Image.SCALE_SMOOTH), 0, 0, null);
+        g2.drawImage(imagenOriginal, 0, 0, anchoBoton, altoBoton, null);
         g2.dispose();
 
         return new ImageIcon(lienzo);
+    }
+
+    private Font cargarFuentePixel() {
+        try (InputStream fuenteStream = getClass().getResourceAsStream(
+                "/fuentes/PixelOperator.ttf")) {
+
+            if (fuenteStream != null) {
+                return Font.createFont(Font.TRUETYPE_FONT, fuenteStream);
+            }
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar PixelOperator en PanelAprender.");
+        }
+
+        return new Font(Font.MONOSPACED, Font.BOLD, 25);
     }
 
     // Elimina los bordes transparentes de un sprite antes de escalarlo
