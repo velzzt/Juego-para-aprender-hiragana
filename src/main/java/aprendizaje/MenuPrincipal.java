@@ -53,6 +53,7 @@ public class MenuPrincipal extends JFrame {
     // Se almacenan como atributos para poder modificar su posición e iconos dinámicamente
     private JButton btnAprender;
     private JButton btnJugar;
+    private JButton btnCreditos;
     private TituloAnimado titulo;
 
     // Capa negra que oculta el menú mientras Swing termina de calcular
@@ -232,6 +233,20 @@ public class MenuPrincipal extends JFrame {
         btnJugar.setIconTextGap(0);
         panel.add(btnJugar);
 
+        btnCreditos = crearBotonConSprite(
+                "Créditos",
+                0, 0, 400, 133,
+                rutaAprenderNormal,  // usa el mismo sprite que los otros
+                rutaAprenderHover
+        );
+        btnCreditos.setText("Créditos");
+        btnCreditos.setFont(cargarFuentePixel().deriveFont(Font.PLAIN, 30f));
+        btnCreditos.setForeground(new Color(82, 48, 29));
+        btnCreditos.setHorizontalTextPosition(JButton.CENTER);
+        btnCreditos.setVerticalTextPosition(JButton.CENTER);
+        btnCreditos.setIconTextGap(0);
+        panel.add(btnCreditos);
+
         // Reposiciona y redimensiona los botones cuando cambia el tamaño del panel
         panel.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
@@ -274,6 +289,18 @@ public class MenuPrincipal extends JFrame {
         };
 
         btnJugar.addActionListener(a);
+
+        ActionListener i = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Sonido.reproducirClick();
+                PanelCreditos panelCreditos = new PanelCreditos(MenuPrincipal.this);
+                mostrarVista(panelCreditos);
+
+            }
+        };
+
+        btnCreditos.addActionListener(i);
 
         // Crea el logo animado
         titulo = new TituloAnimado();
@@ -342,6 +369,13 @@ public class MenuPrincipal extends JFrame {
         btnJugar.setBounds(
                 xBotones,
                 yPrimerBoton + altoBoton + espacio,
+                anchoBoton,
+                altoBoton
+        );
+
+        btnCreditos.setBounds(
+                xBotones,
+                yPrimerBoton+2*(altoBoton+espacio),
                 anchoBoton,
                 altoBoton
         );

@@ -43,7 +43,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
     private int contadorError = 0;
 
     private int contadorTicks = 0;
-    private int INTERVALO_APARICION = 300; // segundos
+    private int INTERVALO_APARICION = 150; // segundos
 
     // Constructor
     public HiraganaEnemigo(JFrame frame, String rutaFondo, MenuPrincipal menu) {
@@ -351,19 +351,19 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
 
                 // Verificar cambio de nivel
                 if (nivel == 1 && aciertos >= ACIERTOS_NIVEL_2) {
-                    INTERVALO_APARICION = 200;
+                    INTERVALO_APARICION = 80;
                     nivel = 2;
                     velocidad = 4;
                     aciertos = 0;
                     contadorTicks = 0;
-                    System.out.println("¡Nivel 2! Velocidad: " + velocidad);
+                    //System.out.println("¡Nivel 2! Velocidad: " + velocidad);
                 } else if (nivel == 2 && aciertos >= ACIERTOS_NIVEL_3) {
-                    INTERVALO_APARICION = 180;
+                    INTERVALO_APARICION = 50;
                     nivel = 3;
                     velocidad = 7;
                     aciertos = 0;
                     contadorTicks = 0;
-                    System.out.println("¡Nivel 3! Velocidad: " + velocidad);
+                    //System.out.println("¡Nivel 3! Velocidad: " + velocidad);
                 }
                 break;
             }

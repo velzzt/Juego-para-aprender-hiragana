@@ -9,6 +9,8 @@ package aprendizaje;
  * @author Jack
  */
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -188,24 +190,32 @@ public class PanelRepaso extends JPanel {
         JLabel lblFinal = new JLabel("¡Inténtalo otra vez!", SwingConstants.CENTER);
         lblFinal.setFont(new Font("SansSerif", Font.BOLD, 40));
 
-        JButton volver = new JButton("Volver");
+        // Panel inferior con dos botones
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
+        panelBotones.setOpaque(false);
 
-        volver.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PanelRepaso repaso = new PanelRepaso(menu, seccionActual);
-                removeAll();
-                add(repaso);
-                revalidate();
-                repaint();
-              
-            }
+        // Botón "Volver a intentar"
+        JButton btnVolverIntentar = new JButton("Volver a intentar");
+        btnVolverIntentar.setFont(new Font("SansSerif", Font.BOLD, 20));
+        btnVolverIntentar.setPreferredSize(new Dimension(220, 50));
+        btnVolverIntentar.addActionListener(e -> {
+            // Reinicia el módulo actual
+            PanelRepaso repaso = new PanelRepaso(menu, seccionActual);
+            menu.mostrarVista(repaso);
         });
 
-        add(lblFinal, BorderLayout.CENTER);
-        add(volver, BorderLayout.SOUTH);
+        // Botón "Repasar" (lleva al inicio del mismo módulo)
+        JButton btnModulos = new JButton("Aprender");
+        btnModulos.setFont(new Font("SansSerif", Font.BOLD, 20));
+        btnModulos.setPreferredSize(new Dimension(220, 50));
+        btnModulos.addActionListener(e -> {
+            menu.mostrarPanelAprender();
+        });
 
+        panelBotones.add(btnVolverIntentar);
+        panelBotones.add(btnModulos);
+        add(panelBotones, BorderLayout.SOUTH);
+        add(lblFinal, BorderLayout.CENTER);
         revalidate();
         repaint();
     }
