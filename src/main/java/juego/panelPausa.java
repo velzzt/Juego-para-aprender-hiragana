@@ -39,13 +39,13 @@ public class panelPausa extends JPanel {
 
         // Botón Continuar
         gbc.gridy = 1;
-        JButton btnContinuar = crearBotonEstilizado("Continuar", 220, 100);
+        JButton btnContinuar = crearBotonEstilizado("Continuar", 220, 150);
         btnContinuar.addActionListener(e -> juego.continuarJuego());
         add(btnContinuar, gbc);
 
         // Botón Volver al Menú
         gbc.gridy = 2;
-        JButton btnMenu = crearBotonEstilizado("Volver al Menú", 300, 100);
+        JButton btnMenu = crearBotonEstilizado("Volver al Menú", 300, 150);
         btnMenu.addActionListener(e -> juego.volverMenu());
         add(btnMenu, gbc);
     }
