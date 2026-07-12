@@ -13,9 +13,9 @@ public class PanelNarrativa extends JPanel {
     private int indiceFondo = 0;
 
     private String[] imagenesFondo = {
-        "/images_narrativa/fondo1.png",
-        "/images_narrativa/fondo2.png",
-        "/images_narrativa/fondo3.png"
+        "/images_narrativa/FONDO_1.png",
+        "/images_narrativa/FONDO_2.png",
+        "/images_narrativa/FONDO_3.png"
     };
 
     // Componentes que necesitamos mover
