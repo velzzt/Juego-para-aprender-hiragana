@@ -13,9 +13,9 @@ public class PanelNarrativa extends JPanel {
     private int indiceFondo = 0;
 
     private String[] imagenesFondo = {
-        "/images_narrativa/fondo1.png",
-        "/images_narrativa/fondo2.png",
-        "/images_narrativa/fondo3.png"
+        "/images_narrativa/FONDO_1.png",
+        "/images_narrativa/FONDO_2.png",
+        "/images_narrativa/FONDO_3.png"
     };
 
     // Componentes que necesitamos mover
@@ -56,38 +56,7 @@ public class PanelNarrativa extends JPanel {
     }
 
     private void inicializarComponentesEstiloJuego() {
-        // --- 1. BLOQUE DE ENTRADA DE NOMBRE ---
-        lblEtiqueta = new JLabel("Ingresa un nombre:", SwingConstants.CENTER);
-        lblEtiqueta.setFont(fuentePixelBold.deriveFont(24f));
-        lblEtiqueta.setForeground(new Color(40, 40, 40));
-        add(lblEtiqueta);
-
-        txtNombre = new JTextField() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(getBackground());
-                g2d.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
-                g2d.dispose();
-                super.paintComponent(g);
-            }
-
-            @Override
-            protected void paintBorder(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(new Color(140, 140, 140));
-                g2d.setStroke(new BasicStroke(2));
-                g2d.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 15, 15);
-                g2d.dispose();
-            }
-        };
-        txtNombre.setFont(fuentePixel.deriveFont(22f));
-        txtNombre.setHorizontalAlignment(JTextField.CENTER);
-        txtNombre.setOpaque(false);
-        txtNombre.setBorder(new EmptyBorder(0, 10, 0, 10));
-        add(txtNombre);
+        
 
         // --- 2. SELECTOR DE PAISAJES ---
         btnIzquierda = new JButton("<") {
@@ -184,10 +153,7 @@ public class PanelNarrativa extends JPanel {
 
         btnListo.addActionListener(e -> {
             Sonido.reproducirClick();
-            String nombreIngresado = txtNombre.getText().trim();
-            if (nombreIngresado.isEmpty()) {
-                nombreIngresado = "Héroe";
-            }
+            String nombreIngresado = "Jugador";
             String rutaFondo = imagenesFondo[indiceFondo];
             ventanaPrincipal.iniciarJuegoConfirmado(nombreIngresado, rutaFondo);
         });
@@ -201,12 +167,6 @@ public class PanelNarrativa extends JPanel {
         int alto = getHeight();
 
         if (ancho == 0 || alto == 0) return;
-
-        // Etiqueta
-        lblEtiqueta.setBounds(ancho/2 - 125, alto/2 - 170, 250, 30);
-
-        // Campo de texto
-        txtNombre.setBounds(ancho/2 - 125, alto/2 - 130, 250, 35);
 
         // Flecha izquierda
         btnIzquierda.setBounds(ancho/2 - 150, alto/2 - 40, 60, 40);
