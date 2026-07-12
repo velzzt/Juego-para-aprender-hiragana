@@ -171,16 +171,6 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         g2d.setFont(new Font("Monospaced", Font.BOLD, 20));
         g2d.setColor(Color.WHITE);
         g2d.drawString("Nivel: " + nivel, getWidth() - 150, 30);
-        
-
-        // Mensaje de pausa
-        if (pausado && !juegoTerminado) {
-            g2d.setFont(new Font("Monospaced", Font.BOLD, 60));
-            g2d.setColor(Color.YELLOW);
-            String texto = "PAUSA";
-            int ancho = g2d.getFontMetrics().stringWidth(texto);
-            g2d.drawString(texto, (getWidth() - ancho) / 2, 200);
-        }
 
         // Game Over
         if (juegoTerminado) {

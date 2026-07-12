@@ -86,7 +86,7 @@ public class Tarjeta extends JPanel {
             btnReproducirAudio.addActionListener(e -> reproducirSonido(leccionActual.getRutaAudio()));
 
             p.add(btnReproducirAudio); //añadimos el boton al panel 'p'
-            p.add(Box.createVerticalStrut(40)); //añadimos espacio entre el boton y el label
+            p.add(Box.createVerticalStrut(0)); //mantiene el romaji junto al botón de audio
 
             //ROMAJI muestra como suenan las silabas japonesas) 
             JLabel letra = new JLabel();

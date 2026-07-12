@@ -55,7 +55,7 @@ public class PanelLeccion extends JPanel {
     private void cargarFondoUnidad() {
         try {
             imagenFondo = ImageIO.read(
-                    getClass().getResource("/menu/fondo_unidad.png")
+                    getClass().getResource("/menu/fondo_repaso.png")
             );
         } catch (IOException | IllegalArgumentException e) {
             imagenFondo = null;
@@ -110,7 +110,8 @@ public class PanelLeccion extends JPanel {
         // ajuste de separación entre botones para no empujar la tarjeta
         JPanel filaBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         filaBotones.setOpaque(false);
-        filaBotones.setBorder(new EmptyBorder(12,0,12,0));
+        // Reserva más espacio debajo que encima para elevar visualmente la fila.
+        filaBotones.setBorder(new EmptyBorder(0, 0, 50, 0));
 
         JButton btnAnterior = crearBotonEstilizado("Anterior");
         JButton btnVolver = crearBotonEstilizado("Volver");

@@ -5,6 +5,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
+import java.io.InputStream;
 
 public class PanelNarrativa extends JPanel {
 
@@ -23,6 +24,8 @@ public class PanelNarrativa extends JPanel {
     private JButton btnIzquierda;
     private JButton btnDerecha;
     private JButton btnListo;
+    private Font fuentePixel;
+    private Font fuentePixelBold;
 
     // Variables para dimensiones de la vista previa y diálogo (las usaremos en paintComponent)
     private int prevX, prevY, prevW = 160, prevH = 100;
@@ -30,6 +33,14 @@ public class PanelNarrativa extends JPanel {
 
     public PanelNarrativa(MenuPrincipal ventana) {
         this.ventanaPrincipal = ventana;
+        this.fuentePixel = cargarFuente(
+                "/fuentes/PixelOperator.ttf",
+                Font.PLAIN
+        );
+        this.fuentePixelBold = cargarFuente(
+                "/fuentes/PixelOperator-Bold.ttf",
+                Font.BOLD
+        );
         this.setLayout(null);
         this.setSize(1280, 800);
         inicializarComponentesEstiloJuego();
@@ -47,7 +58,7 @@ public class PanelNarrativa extends JPanel {
     private void inicializarComponentesEstiloJuego() {
         // --- 1. BLOQUE DE ENTRADA DE NOMBRE ---
         lblEtiqueta = new JLabel("Ingresa un nombre:", SwingConstants.CENTER);
-        lblEtiqueta.setFont(new Font("Serif", Font.BOLD | Font.ITALIC, 22));
+        lblEtiqueta.setFont(fuentePixelBold.deriveFont(24f));
         lblEtiqueta.setForeground(new Color(40, 40, 40));
         add(lblEtiqueta);
 
@@ -72,7 +83,7 @@ public class PanelNarrativa extends JPanel {
                 g2d.dispose();
             }
         };
-        txtNombre.setFont(new Font("Serif", Font.PLAIN, 20));
+        txtNombre.setFont(fuentePixel.deriveFont(22f));
         txtNombre.setHorizontalAlignment(JTextField.CENTER);
         txtNombre.setOpaque(false);
         txtNombre.setBorder(new EmptyBorder(0, 10, 0, 10));
@@ -145,7 +156,7 @@ public class PanelNarrativa extends JPanel {
                 super.paintComponent(g);
             }
         };
-        btnListo.setFont(new Font("Impact", Font.PLAIN, 26));
+        btnListo.setFont(fuentePixelBold.deriveFont(24f));
         btnListo.setFocusPainted(false);
         btnListo.setBorderPainted(false);
         btnListo.setContentAreaFilled(false);
@@ -160,16 +171,19 @@ public class PanelNarrativa extends JPanel {
 
         // Eventos
         btnDerecha.addActionListener(e -> {
+            Sonido.reproducirClick();
             indiceFondo = (indiceFondo + 1) % imagenesFondo.length;
             repaint();
         });
 
         btnIzquierda.addActionListener(e -> {
+            Sonido.reproducirClick();
             indiceFondo = (indiceFondo - 1 + imagenesFondo.length) % imagenesFondo.length;
             repaint();
         });
 
         btnListo.addActionListener(e -> {
+            Sonido.reproducirClick();
             String nombreIngresado = txtNombre.getText().trim();
             if (nombreIngresado.isEmpty()) {
                 nombreIngresado = "Héroe";
@@ -227,6 +241,18 @@ public class PanelNarrativa extends JPanel {
         });
     }
 
+    private Font cargarFuente(String ruta, int estiloRespaldo) {
+        try (InputStream fuenteStream = getClass().getResourceAsStream(ruta)) {
+            if (fuenteStream != null) {
+                return Font.createFont(Font.TRUETYPE_FONT, fuenteStream);
+            }
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar la fuente: " + ruta);
+        }
+
+        return new Font(Font.MONOSPACED, estiloRespaldo, 22);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -277,10 +303,10 @@ public class PanelNarrativa extends JPanel {
         int textY1 = dialogoY + 85; // ajusta según necesidad
         int textY2 = dialogoY + 135;
 
-        g2d.setFont(new Font("Georgia", Font.BOLD | Font.ITALIC, 26));
+        g2d.setFont(fuentePixelBold.deriveFont(24f));
         g2d.drawString("¿Te gustaría aprender un idioma fuera de lo cotidiano? Pues empecemos...", textX, textY1);
 
-        g2d.setFont(new Font("Georgia", Font.ITALIC, 22));
+        g2d.setFont(fuentePixel.deriveFont(22f));
         g2d.drawString("Usa las flechas para elegir tu paisaje favorito.", textX, textY2);
     }
 
