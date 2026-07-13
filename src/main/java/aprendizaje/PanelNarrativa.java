@@ -203,7 +203,7 @@ public class PanelNarrativa extends JPanel {
                     btnSiguiente.setText("¡A JUGAR!");
                 }
             } else if (faseActual == Fase.TUTORIAL) {
-                // Usamos un nombre por defecto
+                 Sonido.reproducirMusicaJugar(); 
                 String nombreIngresado = "Jugador";
                 String rutaFondo = imagenesFondo[indiceFondo];
                 ventanaPrincipal.iniciarJuegoConfirmado(nombreIngresado, rutaFondo);
