@@ -14,6 +14,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
 	private Timer temporizador;
     private int velocidad = 2;
     private MenuPrincipal menu;
+    private Font fuentePixel;
 
     private String[] caracteres = {"あ","い","う","え","お","か","き","く","け","こ",
                                    "さ","し","す","せ","そ"};
@@ -48,6 +49,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
     // Constructor
     public HiraganaEnemigo(JFrame frame, String rutaFondo, MenuPrincipal menu) {
         this.menu=menu;
+        fuentePixel = cargarFuentePixel();
         try {
         fondoImagen = new ImageIcon(getClass().getResource(rutaFondo)).getImage();
     } catch (Exception e) {
@@ -150,7 +152,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         }
 
         // Puntuación centrada
-        g2d.setFont(new Font("Monospaced", Font.BOLD, 48));
+        g2d.setFont(fuentePixel.deriveFont(Font.BOLD, 48f));
         g2d.setColor(Color.WHITE);
         String textoPuntaje = "Puntuación: " + puntaje;
         FontMetrics fmPunt = g2d.getFontMetrics();
@@ -168,18 +170,20 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         }
 
         // Mostrar nivel
-        g2d.setFont(new Font("Monospaced", Font.BOLD, 20));
+        g2d.setFont(fuentePixel.deriveFont(Font.BOLD, 30f));
         g2d.setColor(Color.WHITE);
         g2d.drawString("Nivel: " + nivel, getWidth() - 150, 30);
 
         // Game Over
         if (juegoTerminado) {
-            g2d.setFont(new Font("Monospaced", Font.BOLD, 60));
+            g2d.setColor(new Color(0, 0, 0, 180));
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+            g2d.setFont(fuentePixel.deriveFont(Font.BOLD, 120f));
             g2d.setColor(Color.RED);
             String texto = "GAME OVER";
             int ancho = g2d.getFontMetrics().stringWidth(texto);
             g2d.drawString(texto, (getWidth() - ancho) / 2, getHeight() / 2);
-            g2d.setFont(new Font("Monospaced", Font.PLAIN, 20));
+            g2d.setFont(new Font("Monospaced", Font.PLAIN, 40));
             g2d.setColor(Color.WHITE);
             String reinicio = "Presiona ENTER para reiniciar";
             int anchoReinicio = g2d.getFontMetrics().stringWidth(reinicio);
@@ -394,4 +398,11 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void keyReleased(KeyEvent e) {}
+
+    private Font cargarFuentePixel() {
+    try (java.io.InputStream is = getClass().getResourceAsStream("/fuentes/PixelOperator.ttf")) {
+        if (is != null) return Font.createFont(Font.TRUETYPE_FONT, is);
+    } catch (Exception e) {}
+    return new Font(Font.MONOSPACED, Font.BOLD, 60); // fallback
+}
 }

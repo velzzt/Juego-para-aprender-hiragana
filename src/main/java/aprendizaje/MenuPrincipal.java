@@ -72,7 +72,7 @@ public class MenuPrincipal extends JFrame {
         setSize(1280, 800);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
-        setTitle("Aprender hiragana");
+        setTitle("HIRAGANA ADVENTURE");
         setDefaultCloseOperation(EXIT_ON_CLOSE); // para terminar el proceso
         setLocationRelativeTo(null); // ventana en el centro de la pantalla
 

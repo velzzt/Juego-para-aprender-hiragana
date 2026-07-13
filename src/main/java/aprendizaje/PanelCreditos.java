@@ -40,12 +40,12 @@ public class PanelCreditos extends JPanel {
         panelCentral.add(Box.createVerticalGlue());
 
         // Línea 1: Título en amarillo
-        JLabel lblTitulo = new JLabel("EL EQUIPO DE DESARROLLO");
-        lblTitulo.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+        JLabel lblTitulo = new JLabel("NUESTRO EQUIPO DE DESARROLLO");
+        lblTitulo.setFont(fuentePixel.deriveFont(Font.PLAIN, 40f));
         lblTitulo.setForeground(Color.YELLOW);
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelCentral.add(lblTitulo);
-        panelCentral.add(Box.createVerticalStrut(20));
+        panelCentral.add(Box.createVerticalStrut(40));
 
         // Línea 2: "Programmers" en amarillo
         JLabel lblProgrammers = new JLabel("Programación");
@@ -65,6 +65,39 @@ public class PanelCreditos extends JPanel {
             panelCentral.add(lbl);
         }
         panelCentral.add(Box.createVerticalStrut(20));
+        // Línea "Design" en amarillo
+        JLabel lblDesign = new JLabel("Diseño");
+        lblDesign.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+        lblDesign.setForeground(Color.YELLOW);
+        lblDesign.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(lblDesign);
+        panelCentral.add(Box.createVerticalStrut(10));
+
+        // Nombres de diseñadores en blanco
+        String[] disenadores = {"Franco Donayre", "Leonardo Arellan"};
+        for (String nombre : disenadores) {
+            JLabel lbl = new JLabel(nombre);
+            lbl.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+            lbl.setForeground(Color.WHITE);
+            lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panelCentral.add(lbl);
+        }
+        panelCentral.add(Box.createVerticalStrut(20));
+
+        // Línea "Narrativa" en amarillo
+        JLabel lblNarrativa = new JLabel("Narrativa");
+        lblNarrativa.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+        lblNarrativa.setForeground(Color.YELLOW);
+        lblNarrativa.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(lblNarrativa);
+        panelCentral.add(Box.createVerticalStrut(10));
+
+        // Nombre de narrador en blanco
+        JLabel lblNarrativa1 = new JLabel("Jack Hilario");
+        lblNarrativa1.setFont(fuentePixel.deriveFont(Font.PLAIN, 30f));
+        lblNarrativa1.setForeground(Color.WHITE);
+        lblNarrativa1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(lblNarrativa1);
 
         // Añadir otro "glue" para centrar verticalmente
         panelCentral.add(Box.createVerticalGlue());
