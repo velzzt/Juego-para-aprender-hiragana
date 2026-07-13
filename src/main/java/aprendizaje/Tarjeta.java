@@ -56,8 +56,8 @@ public class Tarjeta extends JPanel {
             );
 
             Image imagenPergamino = iconoPergamino.getImage().getScaledInstance(
-                    600,
-                    450,
+                    460,
+                    360,
                     Image.SCALE_SMOOTH
             );
 
@@ -77,7 +77,8 @@ public class Tarjeta extends JPanel {
             if (url != null) {
 
                 ImageIcon icon = new ImageIcon(url);
-
+                // Se conserva el ImageIcon original para mantener la animación.
+                // getScaledInstance puede impedir el renderizado de algunos GIF.
                 gif.setIcon(icon);
 
             } else {
@@ -93,7 +94,7 @@ public class Tarjeta extends JPanel {
             // Agregar el pergamino al panel
             p.add(pergamino);
 
-            p.add(Box.createVerticalStrut(30));
+            p.add(Box.createVerticalStrut(5));
 
             // ==================== AUDIO ====================
             JButton btnReproducirAudio = new JButton();
@@ -109,7 +110,7 @@ public class Tarjeta extends JPanel {
 
             p.add(btnReproducirAudio);
 
-            p.add(Box.createVerticalStrut(5));
+            p.add(Box.createVerticalStrut(0));
 
             // ==================== ROMAJI ====================
             JLabel letra = new JLabel();
