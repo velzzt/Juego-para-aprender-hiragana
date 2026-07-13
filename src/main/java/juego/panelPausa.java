@@ -13,6 +13,7 @@ import aprendizaje.MenuPrincipal;
 public class panelPausa extends JPanel {
     private HiraganaEnemigo juego;
     private Font fuentePixel;
+    private Image fondoImagen;
 
     public panelPausa(HiraganaEnemigo juego, JFrame frame, MenuPrincipal menu) {
         this.juego = juego;
@@ -20,8 +21,36 @@ public class panelPausa extends JPanel {
         setLayout(new GridBagLayout());
         setBackground(new Color(0, 0, 0, 180));
 
+        // Cargar la imagen de fondo
+        try {
+            fondoImagen = new ImageIcon(getClass().getResource("/menu/fondo_pausa.png")).getImage();
+        } catch (Exception e) {
+            fondoImagen = null;
+        }
+
         fuentePixel = cargarFuentePixel();
         iniciarComponentes();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        // Dibujar la imagen de fondo si existe, con opacidad
+        if (fondoImagen != null) {
+            // Escalar la imagen al tamaño del panel
+            Image fondoEscalado = fondoImagen.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+            // Aplicar transparencia (0.4 = 40% de opacidad, para que se vea el juego detrás)
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+            g2d.drawImage(fondoEscalado, 0, 0, this);
+        } else {
+            // Fallback: fondo negro semitransparente
+            g2d.setColor(new Color(0, 0, 0, 180));
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        g2d.dispose();
     }
 
     private void iniciarComponentes() {
@@ -30,7 +59,7 @@ public class panelPausa extends JPanel {
         gbc.insets = new Insets(15, 15, 15, 15);
         gbc.anchor = GridBagConstraints.CENTER;
 
-        // Título "PAUSA" con fuente pixel
+        // Título "PAUSA" 
         gbc.gridy = 0;
         JLabel lblPausa = new JLabel("PAUSA", SwingConstants.CENTER);
         lblPausa.setFont(fuentePixel.deriveFont(Font.BOLD, 60f));

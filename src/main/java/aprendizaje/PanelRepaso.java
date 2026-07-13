@@ -67,7 +67,7 @@ public class PanelRepaso extends JPanel {
         this.fuentePixel = cargarFuentePixel();
         setLayout(new BorderLayout(20, 20));
 
-        if (numeroBoton == 1) {
+        if (numeroBoton == 1 || numeroBoton == 2 || numeroBoton == 3 || numeroBoton == 4 ) {
             cargarFondoRepaso();
         }
 
