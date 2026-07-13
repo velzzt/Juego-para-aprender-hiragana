@@ -5,7 +5,10 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
+import javax.imageio.ImageIO;
 
 public class PanelNarrativa extends JPanel {
 
@@ -25,6 +28,7 @@ public class PanelNarrativa extends JPanel {
     private JButton btnDerecha;
     private JButton btnListo;
     private JButton btnSiguiente;
+    private JButton btnVolverMenu;
     private Font fuentePixel;
     private Font fuentePixelBold;
 
@@ -101,59 +105,33 @@ public class PanelNarrativa extends JPanel {
     private void inicializarComponentesEstiloJuego() {
 
         // --- 2. SELECTOR DE PAISAJES ---
-        btnIzquierda = new JButton("<") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(getBackground());
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-                g2d.dispose();
-                super.paintComponent(g);
-            }
-
-            @Override
-            protected void paintBorder(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(Color.BLACK);
-                g2d.setStroke(new BasicStroke(2));
-                g2d.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 15, 15);
-                g2d.dispose();
-            }
-        };
-        btnIzquierda.setFont(new Font("Monospaced", Font.BOLD, 22));
-        btnIzquierda.setFocusPainted(false);
-        btnIzquierda.setContentAreaFilled(false);
-        configurarEfectoHover(btnIzquierda, new Color(245, 245, 245), new Color(215, 215, 215));
+        btnIzquierda = crearBotonFlecha(
+                "/menu/flecha_paisaje_izquierda.png",
+                "/menu/flecha_paisaje_izquierda_hover.png",
+                75,
+                68
+        );
         add(btnIzquierda);
 
-        btnDerecha = new JButton(">") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(getBackground());
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-                g2d.dispose();
-                super.paintComponent(g);
-            }
-
-            @Override
-            protected void paintBorder(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(Color.BLACK);
-                g2d.setStroke(new BasicStroke(2));
-                g2d.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 15, 15);
-                g2d.dispose();
-            }
-        };
-        btnDerecha.setFont(new Font("Monospaced", Font.BOLD, 22));
-        btnDerecha.setFocusPainted(false);
-        btnDerecha.setContentAreaFilled(false);
-        configurarEfectoHover(btnDerecha, new Color(245, 245, 245), new Color(215, 215, 215));
+        btnDerecha = crearBotonFlecha(
+                "/menu/flecha_paisaje_derecha.png",
+                "/menu/flecha_paisaje_derecha_hover.png",
+                75,
+                68
+        );
         add(btnDerecha);
+
+        btnVolverMenu = crearBotonFlecha(
+                "/menu/boton_volver.png",
+                "/menu/boton_volver_hover.png",
+                70,
+                70
+        );
+        btnVolverMenu.addActionListener(e -> {
+            Sonido.reproducirClick();
+            ventanaPrincipal.mostrarMenu();
+        });
+        add(btnVolverMenu);
 
         // --- 3. BOTÓN COMENZAR ---
         btnListo = new JButton("COMENZAR...") {
@@ -302,10 +280,13 @@ public class PanelNarrativa extends JPanel {
         }
 
         // Flecha izquierda
-        btnIzquierda.setBounds(ancho / 2 - 150, alto / 2 - 40, 60, 40);
+        btnIzquierda.setBounds(ancho/2 - 170, alto/2 - 54, 75, 68);
 
         // Flecha derecha
-        btnDerecha.setBounds(ancho / 2 + 90, alto / 2 - 40, 60, 40);
+        btnDerecha.setBounds(ancho/2 + 95, alto/2 - 54, 75, 68);
+
+        // Regreso al menú principal
+        btnVolverMenu.setBounds(14, 14, 70, 70);
 
         // Botón Comenzar
         btnListo.setBounds(ancho / 2 - 110, alto / 2 + 80, 220, 50);
@@ -317,10 +298,100 @@ public class PanelNarrativa extends JPanel {
         // Guardar coordenadas del cuadro de diálogo
         dialogoX = (ancho - dialogoW) / 2;
         dialogoY = alto - 200; // 200px desde abajo, ajusta según necesites
+    }
 
-        // Posición del botón Siguiente, abajo a la derecha del cuadro de diálogo
-        btnSiguiente.setBounds(dialogoX + dialogoW - 160, dialogoY + dialogoH - 50, 130, 36);
+    private JButton crearBotonFlecha(
+            String rutaNormal,
+            String rutaHover,
+            int ancho,
+            int alto
+    ) {
+        JButton boton = new JButton();
+        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        boton.setFocusPainted(false);
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);
+        boton.setOpaque(false);
+        boton.setRolloverEnabled(true);
 
+        try {
+            BufferedImage normal = ImageIO.read(getClass().getResource(rutaNormal));
+            BufferedImage hover = ImageIO.read(getClass().getResource(rutaHover));
+            int[] limitesNormal = limitesVisibles(normal);
+            int[] limitesHover = limitesVisibles(hover);
+            int minX = Math.min(limitesNormal[0], limitesHover[0]);
+            int minY = Math.min(limitesNormal[1], limitesHover[1]);
+            int maxX = Math.max(limitesNormal[2], limitesHover[2]);
+            int maxY = Math.max(limitesNormal[3], limitesHover[3]);
+
+            ImageIcon iconoNormal = escalarFlecha(
+                    normal, minX, minY, maxX, maxY, ancho, alto);
+            ImageIcon iconoHover = escalarFlecha(
+                    hover, minX, minY, maxX, maxY, ancho, alto);
+
+            boton.setIcon(iconoNormal);
+            boton.setRolloverIcon(iconoHover);
+            boton.setPressedIcon(iconoHover);
+        } catch (IOException | IllegalArgumentException e) {
+            System.err.println("No se pudieron cargar las flechas de paisaje.");
+        }
+
+        return boton;
+    }
+
+    private int[] limitesVisibles(BufferedImage imagen) {
+        int minX = imagen.getWidth();
+        int minY = imagen.getHeight();
+        int maxX = 0;
+        int maxY = 0;
+
+        for (int y = 0; y < imagen.getHeight(); y++) {
+            for (int x = 0; x < imagen.getWidth(); x++) {
+                if (((imagen.getRGB(x, y) >>> 24) & 0xff) > 10) {
+                    minX = Math.min(minX, x);
+                    minY = Math.min(minY, y);
+                    maxX = Math.max(maxX, x);
+                    maxY = Math.max(maxY, y);
+                }
+            }
+        }
+        return new int[]{minX, minY, maxX, maxY};
+    }
+
+    private ImageIcon escalarFlecha(
+            BufferedImage imagen,
+            int minX,
+            int minY,
+            int maxX,
+            int maxY,
+            int ancho,
+            int alto
+    ) {
+        BufferedImage escalada = new BufferedImage(
+                ancho, alto, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = escalada.createGraphics();
+        g2.setRenderingHint(
+                RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+        int anchoFuente = maxX - minX + 1;
+        int altoFuente = maxY - minY + 1;
+        double escala = Math.min(
+                ancho / (double) anchoFuente,
+                alto / (double) altoFuente
+        );
+        int anchoDibujado = Math.max(1, (int) Math.round(anchoFuente * escala));
+        int altoDibujado = Math.max(1, (int) Math.round(altoFuente * escala));
+        int x = (ancho - anchoDibujado) / 2;
+        int y = (alto - altoDibujado) / 2;
+
+        g2.drawImage(
+                imagen,
+                x, y, x + anchoDibujado, y + altoDibujado,
+                minX, minY, maxX + 1, maxY + 1,
+                null);
+        g2.dispose();
+        return new ImageIcon(escalada);
     }
 
     private void configurarEfectoHover(JButton boton, Color colorBase, Color colorHover) {

@@ -2,6 +2,9 @@ package juego;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import aprendizaje.MenuPrincipal;
 
@@ -9,12 +12,15 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
 	private JFrame frameContenedor;
     private panelPausa panelPausa;
     private Image fondoImagen;
+    private BufferedImage imagenCorazon;
+    private Font fuentePixel;
+    private Font fuentePixelBold;
 	private final int anchoRect = 100;
     private final int altoRect = 100;
 	private Timer temporizador;
     private int velocidad = 2;
     private MenuPrincipal menu;
-    private Font fuentePixel;
+
 
     private String[] caracteres = {"あ","い","う","え","お","か","き","く","け","こ",
                                    "さ","し","す","せ","そ"};
@@ -49,7 +55,9 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
     // Constructor
     public HiraganaEnemigo(JFrame frame, String rutaFondo, MenuPrincipal menu) {
         this.menu=menu;
-        fuentePixel = cargarFuentePixel();
+        fuentePixel = cargarFuentePixel("/fuentes/PixelOperator.ttf", Font.PLAIN);
+        fuentePixelBold = cargarFuentePixel("/fuentes/PixelOperator-Bold.ttf", Font.BOLD);
+        cargarImagenCorazon();
         try {
         fondoImagen = new ImageIcon(getClass().getResource(rutaFondo)).getImage();
     } catch (Exception e) {
@@ -152,7 +160,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         }
 
         // Puntuación centrada
-        g2d.setFont(fuentePixel.deriveFont(Font.BOLD, 48f));
+        g2d.setFont(fuentePixelBold.deriveFont(42f));
         g2d.setColor(Color.WHITE);
         String textoPuntaje = "Puntuación: " + puntaje;
         FontMetrics fmPunt = g2d.getFontMetrics();
@@ -160,30 +168,49 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         int xPunt = (getWidth() - anchoPunt) / 2;
         g2d.drawString(textoPuntaje, xPunt, 70);
 
-        // Corazones (vidas) en pixel art
+        // Corazones (vidas) usando el sprite transparente.
         int corX = 20, corY = 20;
-        int pixelSize = 6;
-        int anchoCorazon = CORAZON[0].length * pixelSize;
-        int separacion = 8;
+        int anchoCorazon = 58;
+        int altoCorazon = imagenCorazon == null
+                ? 52
+                : Math.max(1, (int) Math.round(
+                        anchoCorazon
+                                * imagenCorazon.getHeight()
+                                / (double) imagenCorazon.getWidth()
+                ));
+        int separacion = 6;
+        g2d.setRenderingHint(
+                RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
+        );
         for (int i = 0; i < vidas; i++) {
-            dibujarCorazon(g2d, corX + i * (anchoCorazon + separacion), corY, pixelSize);
+            if (imagenCorazon != null) {
+                g2d.drawImage(
+                        imagenCorazon,
+                        corX + i * (anchoCorazon + separacion),
+                        corY,
+                        anchoCorazon,
+                        altoCorazon,
+                        this
+                );
+            }
         }
 
         // Mostrar nivel
-        g2d.setFont(fuentePixel.deriveFont(Font.BOLD, 30f));
+        g2d.setFont(fuentePixelBold.deriveFont(22f));
         g2d.setColor(Color.WHITE);
-        g2d.drawString("Nivel: " + nivel, getWidth() - 150, 30);
+        String textoNivel = "Nivel: " + nivel;
+        int anchoNivel = g2d.getFontMetrics().stringWidth(textoNivel);
+        g2d.drawString(textoNivel, getWidth() - anchoNivel - 20, 35);
 
         // Game Over
         if (juegoTerminado) {
-            g2d.setColor(new Color(0, 0, 0, 180));
-            g2d.fillRect(0, 0, getWidth(), getHeight());
-            g2d.setFont(fuentePixel.deriveFont(Font.BOLD, 120f));
+            g2d.setFont(fuentePixelBold.deriveFont(60f));
             g2d.setColor(Color.RED);
             String texto = "GAME OVER";
             int ancho = g2d.getFontMetrics().stringWidth(texto);
             g2d.drawString(texto, (getWidth() - ancho) / 2, getHeight() / 2);
-            g2d.setFont(new Font("Monospaced", Font.PLAIN, 40));
+            g2d.setFont(fuentePixel.deriveFont(22f));
             g2d.setColor(Color.WHITE);
             String reinicio = "Presiona ENTER para reiniciar";
             int anchoReinicio = g2d.getFontMetrics().stringWidth(reinicio);
@@ -234,11 +261,18 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
     }
 
     private void perderVida() {
+        if (vidas <= 0) {
+            return;
+        }
+
         vidas--;
         if (vidas <= 0) {
             vidas = 0;
             juegoTerminado = true;
             temporizador.stop();
+            aprendizaje.Sonido.reproducirGameOver();
+        } else {
+            aprendizaje.Sonido.reproducirPierdeCorazon();
         }
     }
 
@@ -284,30 +318,51 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
         repaint();
     }
 
-    // Matriz del corazón (pixel art)
-    private static final int[][] CORAZON = {
-        {0, 2, 2, 0, 0, 2, 2, 0},
-        {2, 1, 1, 2, 2, 1, 1, 2},
-        {2, 1, 1, 1, 1, 1, 1, 2},
-        {2, 1, 1, 1, 1, 1, 1, 2},
-        {0, 2, 1, 1, 1, 1, 2, 0},
-        {0, 0, 2, 1, 1, 2, 0, 0},
-        {0, 0, 0, 2, 2, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0}
-    };
+    private void cargarImagenCorazon() {
+        try {
+            BufferedImage original = ImageIO.read(
+                    getClass().getResource("/menu/corazon.png")
+            );
+            int minX = original.getWidth();
+            int minY = original.getHeight();
+            int maxX = -1;
+            int maxY = -1;
 
-    // Método para dibujar un corazón estilo pixelado
-    private void dibujarCorazon(Graphics2D g2d, int x, int y, int pixelSize) {
-        for (int fila = 0; fila < CORAZON.length; fila++) {
-            for (int col = 0; col < CORAZON[fila].length; col++) {
-                int valor = CORAZON[fila][col];
-                if (valor == 0) continue;
-                Color color = (valor == 1) ? new Color(237, 28, 36)   
-                                           : new Color(140, 15, 20);  
-                g2d.setColor(color);
-                g2d.fillRect(x + col * pixelSize, y + fila * pixelSize, pixelSize, pixelSize);
+            for (int y = 0; y < original.getHeight(); y++) {
+                for (int x = 0; x < original.getWidth(); x++) {
+                    if (((original.getRGB(x, y) >>> 24) & 0xff) > 10) {
+                        minX = Math.min(minX, x);
+                        minY = Math.min(minY, y);
+                        maxX = Math.max(maxX, x);
+                        maxY = Math.max(maxY, y);
+                    }
+                }
             }
+
+            imagenCorazon = maxX >= 0
+                    ? original.getSubimage(
+                            minX,
+                            minY,
+                            maxX - minX + 1,
+                            maxY - minY + 1
+                    )
+                    : original;
+        } catch (Exception e) {
+            imagenCorazon = null;
+            System.err.println("No se pudo cargar /menu/corazon.png");
         }
+    }
+
+    private Font cargarFuentePixel(String ruta, int estiloRespaldo) {
+        try (InputStream fuenteStream = getClass().getResourceAsStream(ruta)) {
+            if (fuenteStream != null) {
+                return Font.createFont(Font.TRUETYPE_FONT, fuenteStream);
+            }
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar la fuente: " + ruta);
+        }
+
+        return new Font(Font.MONOSPACED, estiloRespaldo, 22);
     }
 
     // Manejo de teclado
@@ -339,6 +394,7 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
                 posY[i] = posY[cantidad - 1];
                 cantidad--;
                 puntaje += 10;
+                aprendizaje.Sonido.reproducirPuntos();
                 aciertos++;
                 entradaActual.setLength(0);
                 encontrado = true;
@@ -398,11 +454,4 @@ public class HiraganaEnemigo extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void keyReleased(KeyEvent e) {}
-
-    private Font cargarFuentePixel() {
-    try (java.io.InputStream is = getClass().getResourceAsStream("/fuentes/PixelOperator.ttf")) {
-        if (is != null) return Font.createFont(Font.TRUETYPE_FONT, is);
-    } catch (Exception e) {}
-    return new Font(Font.MONOSPACED, Font.BOLD, 60); // fallback
-}
 }

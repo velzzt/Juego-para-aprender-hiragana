@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 public class Tarjeta extends JPanel {
 
     private CardLayout card;
-    private List<Leccion> lecciones; //lista que guarda objetos de tipo Leccion
+    private List<Leccion> lecciones; // lista que guarda objetos de tipo Leccion
     private int indiceActual = 1;
     private final boolean usarBotonPlay;
     private final Font fuentePixel;
@@ -35,20 +35,19 @@ public class Tarjeta extends JPanel {
         this.usarBotonPlay = usarBotonPlay;
         this.fuentePixel = cargarFuentePixel();
 
-        card = new CardLayout(); //creamos el CardLayout
+        card = new CardLayout(); // creamos el CardLayout
         setLayout(card); // le asignamos un layout de tipo CardLayout a Tarjeta
         crearTarjetas();
-
     }
 
-    //Creamos el 'molde' de Tarjeta que contiene el gif,audio y el label de texto
+    // Creamos el 'molde' de Tarjeta que contiene el gif, audio y el label de texto
     public void crearTarjetas() {
 
-        //Se crea un panel para cada tarjeta y se le añaden sus componentes
+        // Se crea un panel para cada tarjeta y se le añaden sus componentes
         for (int i = 0; i < lecciones.size(); i++) {
-            final int index = i;
-            JPanel p = new JPanel();
+            final int index = i; // variable final para usar en clases anónimas
 
+            JPanel p = new JPanel();
             p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
             p.setAlignmentX(Component.CENTER_ALIGNMENT);
             p.setOpaque(false);
@@ -57,7 +56,6 @@ public class Tarjeta extends JPanel {
             ImageIcon iconoPergamino = new ImageIcon(
                     getClass().getResource("/menu/CUADRO_GIF.png")
             );
-
             Image imagenPergamino = iconoPergamino.getImage().getScaledInstance(
                     600,
                     450,
@@ -66,11 +64,9 @@ public class Tarjeta extends JPanel {
 
             JLabel pergamino = new JLabel(new ImageIcon(imagenPergamino));
             pergamino.setAlignmentX(Component.CENTER_ALIGNMENT);
+            pergamino.setLayout(null); // Layout nulo para posicionar el GIF manualmente
 
-            // Permite poner componentes encima del pergamino
-            pergamino.setLayout(null);
-
-            // ==================== GIF con opacidad (más oscuro) ====================
+            // ==================== GIF con opacidad ====================
             JPanel gifPanel = new JPanel() {
                 private ImageIcon icon;
                 {
@@ -92,8 +88,8 @@ public class Tarjeta extends JPanel {
                         Graphics2D g2d = (Graphics2D) g.create();
                         // Dibujar el GIF
                         g2d.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
-                        // Dibujar una capa negra semitransparente encima para oscurecer
-                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+                        // Aplicar capa oscura con opacidad
+                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
                         g2d.setColor(Color.BLACK);
                         g2d.fillRect(0, 0, getWidth(), getHeight());
                         g2d.dispose();
@@ -125,7 +121,7 @@ public class Tarjeta extends JPanel {
 
             p.add(btnReproducirAudio);
 
-            p.add(Box.createVerticalStrut(5));
+            p.add(Box.createVerticalStrut(0));
 
             // ==================== ROMAJI ====================
             JLabel letra = new JLabel();
