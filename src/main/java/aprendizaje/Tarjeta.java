@@ -41,17 +41,34 @@ public class Tarjeta extends JPanel {
     //Creamos el 'molde' de Tarjeta que contiene el gif,audio y el label de texto
     public void crearTarjetas() {
 
-        //Se crea un panel para cada tarjeta y se le añaden sus componentes (gif, boton para reproducir el audio y el label de texto con la pronunciacion en español del caracter)
+        //Se crea un panel para cada tarjeta y se le añaden sus componentes
         for (int i = 0; i < lecciones.size(); i++) {
 
             JPanel p = new JPanel();
 
-            p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS)); //panel con BoxLayout para organizar los componentes en una sola columna sin espacio entre ellos
-            p.setAlignmentX(Component.CENTER_ALIGNMENT); //alineamos los componentes en el centro del panel 'p'
+            p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+            p.setAlignmentX(Component.CENTER_ALIGNMENT);
+            p.setOpaque(false);
 
-            //GIF
+            // ==================== PERGAMINO ====================
+            ImageIcon iconoPergamino = new ImageIcon(
+                    getClass().getResource("/menu/CUADRO_GIF.png")
+            );
+
+            Image imagenPergamino = iconoPergamino.getImage().getScaledInstance(
+                    600,
+                    450,
+                    Image.SCALE_SMOOTH
+            );
+
+            JLabel pergamino = new JLabel(new ImageIcon(imagenPergamino));
+            pergamino.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            // Permite poner componentes encima del pergamino
+            pergamino.setLayout(new java.awt.GridBagLayout());
+
+            // ==================== GIF ====================
             JLabel gif = new JLabel();
-            gif.setAlignmentX(CENTER_ALIGNMENT);
 
             URL url = getClass().getResource(lecciones.get(i).getRutaGif());
 
@@ -67,41 +84,45 @@ public class Tarjeta extends JPanel {
                 gif.setText("NO SE ENCUENTRA GIF");
             }
 
-            gif.setPreferredSize(new Dimension(500, 300));
             gif.setHorizontalAlignment(JLabel.CENTER);
+            gif.setOpaque(false);
 
-            p.add(gif);
-            p.add(Box.createVerticalStrut(50));
+            // Agregar el GIF encima del pergamino
+            pergamino.add(gif);
 
-            //AUDIO
+            // Agregar el pergamino al panel
+            p.add(pergamino);
+
+            p.add(Box.createVerticalStrut(30));
+
+            // ==================== AUDIO ====================
             JButton btnReproducirAudio = new JButton();
             configurarBotonAudio(btnReproducirAudio);
-            btnReproducirAudio.setAlignmentX(CENTER_ALIGNMENT);
+            btnReproducirAudio.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            //Eliminar el borde que aparece al hacer click
             btnReproducirAudio.setFocusPainted(false);
 
-            //Evento de reproducir audio
             Leccion leccionActual = lecciones.get(i);
-            btnReproducirAudio.addActionListener(e -> reproducirSonido(leccionActual.getRutaAudio()));
+            btnReproducirAudio.addActionListener(
+                    e -> reproducirSonido(leccionActual.getRutaAudio())
+            );
 
-            p.add(btnReproducirAudio); //añadimos el boton al panel 'p'
-            p.add(Box.createVerticalStrut(0)); //mantiene el romaji junto al botón de audio
+            p.add(btnReproducirAudio);
 
-            //ROMAJI muestra como suenan las silabas japonesas) 
+            p.add(Box.createVerticalStrut(5));
+
+            // ==================== ROMAJI ====================
             JLabel letra = new JLabel();
             letra.setText(lecciones.get(i).getRomaji());
-            letra.setAlignmentX(CENTER_ALIGNMENT);
+            letra.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            //Diseño de las vocales en español
             letra.setFont(fuentePixel.deriveFont(Font.PLAIN, 35f));
             letra.setForeground(Color.BLACK);
 
-            p.add(letra);//añadimos el label a 'p'
+            p.add(letra);
 
-            add(p, "tarjeta" + (i + 1)); //agregamos el panel 'p' a Tarjeta
+            add(p, "tarjeta" + (i + 1));
         }
-
     }
 
     //metodos que permiten cambiar de tarjetas
@@ -189,7 +210,10 @@ public class Tarjeta extends JPanel {
         return new Font(Font.MONOSPACED, Font.BOLD, 35);
     }
 
-    /** Hace transparentes la tarjeta y sus vistas para mostrar el fondo de la unidad. */
+    /**
+     * Hace transparentes la tarjeta y sus vistas para mostrar el fondo de la
+     * unidad.
+     */
     public void setFondoTransparente() {
         setOpaque(false);
 
