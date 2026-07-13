@@ -24,12 +24,49 @@ public class PanelNarrativa extends JPanel {
     private JButton btnIzquierda;
     private JButton btnDerecha;
     private JButton btnListo;
+    private JButton btnSiguiente;
     private Font fuentePixel;
     private Font fuentePixelBold;
 
     // Variables para dimensiones de la vista previa y diálogo (las usaremos en paintComponent)
     private int prevX, prevY, prevW = 160, prevH = 100;
     private int dialogoX, dialogoY, dialogoW = 1080, dialogoH = 180;
+
+    //sistema de fases y guion 
+    private enum Fase {
+        SELECCION, TUTORIAL
+    }
+    private Fase faseActual = Fase.SELECCION;
+
+    private class Linea {
+
+        String hablante;
+        String texto;
+
+        Linea(String hablante, String texto) {
+            this.hablante = hablante;
+            this.texto = texto;
+        }
+    }
+
+    private Linea[] guionSeleccion = {
+        new Linea("SENSEI", "¿Listo para adentrarte en un idioma fuera de lo cotidiano? El viaje comienza aquí..."),
+        new Linea("NARRADOR", "Usa las flechas y elige el paisaje que hablará contigo en este camino.")
+    };
+
+    private Linea[] guionTutorial = {
+        new Linea("SENSEI", "¡Es hora de poner a prueba lo aprendido!"),
+        new Linea("SENSEI", "Un símbolo aparecerá por el lado derecho. Tú tienes el poder de detenerlo."),
+        new Linea("SENSEI", "Presiona en tu teclado la letra que le corresponde... ¡antes de que te alcance!"),
+        new Linea("SENSEI", "Cada error te costará un corazón. Solo tienes tres oportunidades."),
+        new Linea("SENSEI", "Entre más rápido y certero seas, más alto subirá tu puntuación."),
+        new Linea("NARRADOR", "Respira hondo. El primer símbolo ya se está formando...")
+    };
+
+    private int indiceLinea = 0;
+    private String textoMostrado = "";
+    private int charIndex = 0;
+    private Timer timerEscritura;
 
     public PanelNarrativa(MenuPrincipal ventana) {
         this.ventanaPrincipal = ventana;
@@ -53,10 +90,15 @@ public class PanelNarrativa extends JPanel {
                 repaint(); // para que paintComponent use las nuevas coordenadas
             }
         });
+        iniciarEscritura(guionActual()[indiceLinea].texto); // NUEVO: arranca el efecto de escritura de la primera línea
+    }
+
+    //devuelve el guion correspondiente a la fase actual
+    private Linea[] guionActual() {
+        return faseActual == Fase.SELECCION ? guionSeleccion : guionTutorial;
     }
 
     private void inicializarComponentesEstiloJuego() {
-        
 
         // --- 2. SELECTOR DE PAISAJES ---
         btnIzquierda = new JButton("<") {
@@ -138,6 +180,40 @@ public class PanelNarrativa extends JPanel {
         configurarEfectoHover(btnListo, colorVerdeBase, colorVerdeBrillante);
         add(btnListo);
 
+        // 3.5 BOTÓN SIGUIENTE (avanza el texto del diálogo)
+        btnSiguiente = new JButton("siguiente") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(getBackground());
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 18, 18);
+                g2d.dispose();
+                super.paintComponent(g);
+            }
+
+            @Override
+            protected void paintBorder(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new Color(230, 140, 40));
+                g2d.setStroke(new BasicStroke(2));
+                g2d.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 18, 18);
+                g2d.dispose();
+            }
+        };
+        btnSiguiente.setFont(fuentePixelBold.deriveFont(18f));
+        btnSiguiente.setFocusPainted(false);
+        btnSiguiente.setBorderPainted(false);
+        btnSiguiente.setContentAreaFilled(false);
+        btnSiguiente.setForeground(new Color(90, 60, 20));
+
+        Color colorNaranjaBase = new Color(255, 224, 178);
+        Color colorNaranjaHover = new Color(255, 205, 140);
+        btnSiguiente.setBackground(colorNaranjaBase);
+        configurarEfectoHover(btnSiguiente, colorNaranjaBase, colorNaranjaHover);
+        add(btnSiguiente);
+
         // Eventos
         btnDerecha.addActionListener(e -> {
             Sonido.reproducirClick();
@@ -153,37 +229,98 @@ public class PanelNarrativa extends JPanel {
 
         btnListo.addActionListener(e -> {
             Sonido.reproducirClick();
-            String nombreIngresado = "Jugador";
-            String rutaFondo = imagenesFondo[indiceFondo];
-            ventanaPrincipal.iniciarJuegoConfirmado(nombreIngresado, rutaFondo);
+            pasarAFaseTutorial();
+        });
+
+        // btnSiguiente avanza el texto del diálogo en cualquier fase
+        btnSiguiente.addActionListener(e -> {
+            Sonido.reproducirClick();
+            Linea[] guion = guionActual();
+
+            if (timerEscritura != null && timerEscritura.isRunning()) {
+                timerEscritura.stop();
+                textoMostrado = guion[indiceLinea].texto;
+                repaint();
+                return;
+            }
+
+            if (indiceLinea < guion.length - 1) {
+                indiceLinea++;
+                iniciarEscritura(guion[indiceLinea].texto);
+                if (indiceLinea == guion.length - 1 && faseActual == Fase.TUTORIAL) {
+                    btnSiguiente.setText("¡A JUGAR!");
+                }
+            } else if (faseActual == Fase.TUTORIAL) {
+                String nombreIngresado = "Jugador";
+                String rutaFondo = imagenesFondo[indiceFondo];
+                ventanaPrincipal.iniciarJuegoConfirmado(nombreIngresado, rutaFondo);
+            }
         });
 
         // Llamar a centrarComponentes una vez al inicio para posicionar correctamente
         centrarComponentes();
     }
 
+    private void pasarAFaseTutorial() {
+        faseActual = Fase.TUTORIAL;
+        indiceLinea = 0;
+        btnSiguiente.setText("siguiente");
+
+        btnIzquierda.setVisible(false);
+        btnDerecha.setVisible(false);
+        btnListo.setVisible(false);
+
+        iniciarEscritura(guionActual()[indiceLinea].texto);
+        repaint();
+    }
+
+    //efecto de escritura letra por letra
+    private void iniciarEscritura(String texto) {
+        textoMostrado = "";
+        charIndex = 0;
+        if (timerEscritura != null) {
+            timerEscritura.stop();
+        }
+        timerEscritura = new Timer(25, e -> {
+            if (charIndex < texto.length()) {
+                textoMostrado += texto.charAt(charIndex);
+                charIndex++;
+                repaint();
+            } else {
+                timerEscritura.stop();
+            }
+        });
+        timerEscritura.start();
+    }
+
     private void centrarComponentes() {
         int ancho = getWidth();
         int alto = getHeight();
 
-        if (ancho == 0 || alto == 0) return;
+        if (ancho == 0 || alto == 0) {
+            return;
+        }
 
         // Flecha izquierda
-        btnIzquierda.setBounds(ancho/2 - 150, alto/2 - 40, 60, 40);
+        btnIzquierda.setBounds(ancho / 2 - 150, alto / 2 - 40, 60, 40);
 
         // Flecha derecha
-        btnDerecha.setBounds(ancho/2 + 90, alto/2 - 40, 60, 40);
+        btnDerecha.setBounds(ancho / 2 + 90, alto / 2 - 40, 60, 40);
 
         // Botón Comenzar
-        btnListo.setBounds(ancho/2 - 110, alto/2 + 80, 220, 50);
+        btnListo.setBounds(ancho / 2 - 110, alto / 2 + 80, 220, 50);
 
         // Guardar las coordenadas de la vista previa (se dibujará en paintComponent)
         prevX = (ancho - prevW) / 2;
-        prevY = alto/2 - 70; // un poco más arriba que las flechas
+        prevY = alto / 2 - 70; // un poco más arriba que las flechas
 
         // Guardar coordenadas del cuadro de diálogo
         dialogoX = (ancho - dialogoW) / 2;
         dialogoY = alto - 200; // 200px desde abajo, ajusta según necesites
+
+        // Posición del botón Siguiente, abajo a la derecha del cuadro de diálogo
+        btnSiguiente.setBounds(dialogoX + dialogoW - 160, dialogoY + dialogoH - 50, 130, 36);
+
     }
 
     private void configurarEfectoHover(JButton boton, Color colorBase, Color colorHover) {
@@ -231,18 +368,20 @@ public class PanelNarrativa extends JPanel {
         }
 
         // 2. Dibujar la Vista Previa Centrada (usando prevX, prevY)
-        try {
-            ImageIcon iconPaisajePequeno = new ImageIcon(getClass().getResource(imagenesFondo[indiceFondo]));
-            g2d.setClip(new RoundRectangle2D.Float(prevX, prevY, prevW, prevH, 15, 15));
-            g2d.drawImage(iconPaisajePequeno.getImage(), prevX, prevY, prevW, prevH, this);
-            g2d.setClip(null);
+        if (faseActual == Fase.SELECCION) {
+            try {
+                ImageIcon iconPaisajePequeno = new ImageIcon(getClass().getResource(imagenesFondo[indiceFondo]));
+                g2d.setClip(new RoundRectangle2D.Float(prevX, prevY, prevW, prevH, 15, 15));
+                g2d.drawImage(iconPaisajePequeno.getImage(), prevX, prevY, prevW, prevH, this);
+                g2d.setClip(null);
 
-            g2d.setColor(Color.BLACK);
-            g2d.setStroke(new BasicStroke(3));
-            g2d.drawRoundRect(prevX, prevY, prevW, prevH, 15, 15);
-        } catch (Exception e) {
-            g2d.setColor(Color.DARK_GRAY);
-            g2d.fillRoundRect(prevX, prevY, prevW, prevH, 15, 15);
+                g2d.setColor(Color.BLACK);
+                g2d.setStroke(new BasicStroke(3));
+                g2d.drawRoundRect(prevX, prevY, prevW, prevH, 15, 15);
+            } catch (Exception e) {
+                g2d.setColor(Color.DARK_GRAY);
+                g2d.fillRoundRect(prevX, prevY, prevW, prevH, 15, 15);
+            }
         }
 
         // 3. Cuadro de Diálogo Inferior (usando dialogoX, dialogoY)
@@ -256,6 +395,20 @@ public class PanelNarrativa extends JPanel {
             g2d.setColor(new Color(160, 40, 40));
             g2d.drawRoundRect(dialogoX, dialogoY, dialogoW, dialogoH, 20, 20);
         }
+        
+        Linea lineaActual = guionActual()[indiceLinea];
+        g2d.setFont(fuentePixelBold.deriveFont(18f));
+        FontMetrics fmNombre = g2d.getFontMetrics();
+        int anchoNametag = fmNombre.stringWidth(lineaActual.hablante) + 30;
+
+        g2d.setColor(new Color(190, 40, 40));
+        g2d.fillRoundRect(dialogoX + 25, dialogoY - 18, anchoNametag, 34, 12, 12);
+        g2d.setColor(Color.BLACK);
+        g2d.setStroke(new BasicStroke(2));
+        g2d.drawRoundRect(dialogoX + 25, dialogoY - 18, anchoNametag, 34, 12, 12);
+
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(lineaActual.hablante, dialogoX + 40, dialogoY + 6);
 
         // --- 4. FUENTES ANCESTRALES CON TAMAÑO AGRANDADO ---
         g2d.setColor(new Color(35, 35, 35));
@@ -264,10 +417,7 @@ public class PanelNarrativa extends JPanel {
         int textY2 = dialogoY + 135;
 
         g2d.setFont(fuentePixelBold.deriveFont(24f));
-        g2d.drawString("¿Te gustaría aprender un idioma fuera de lo cotidiano? Pues empecemos...", textX, textY1);
-
-        g2d.setFont(fuentePixel.deriveFont(22f));
-        g2d.drawString("Usa las flechas para elegir tu paisaje favorito.", textX, textY2);
+        g2d.drawString(textoMostrado, textX, textY1);
     }
 
 }
