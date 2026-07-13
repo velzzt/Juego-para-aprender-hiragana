@@ -1,14 +1,11 @@
 package aprendizaje;
 
-import java.awt.AlphaComposite;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.InputStream;
 import java.net.URL;
@@ -25,7 +22,7 @@ import javax.swing.JPanel;
 public class Tarjeta extends JPanel {
 
     private CardLayout card;
-    private List<Leccion> lecciones; // lista que guarda objetos de tipo Leccion
+    private List<Leccion> lecciones; //lista que guarda objetos de tipo Leccion
     private int indiceActual = 1;
     private final boolean usarBotonPlay;
     private final Font fuentePixel;
@@ -35,19 +32,20 @@ public class Tarjeta extends JPanel {
         this.usarBotonPlay = usarBotonPlay;
         this.fuentePixel = cargarFuentePixel();
 
-        card = new CardLayout(); // creamos el CardLayout
+        card = new CardLayout(); //creamos el CardLayout
         setLayout(card); // le asignamos un layout de tipo CardLayout a Tarjeta
         crearTarjetas();
+
     }
 
-    // Creamos el 'molde' de Tarjeta que contiene el gif, audio y el label de texto
+    //Creamos el 'molde' de Tarjeta que contiene el gif,audio y el label de texto
     public void crearTarjetas() {
 
-        // Se crea un panel para cada tarjeta y se le añaden sus componentes
+        //Se crea un panel para cada tarjeta y se le añaden sus componentes
         for (int i = 0; i < lecciones.size(); i++) {
-            final int index = i; // variable final para usar en clases anónimas
 
             JPanel p = new JPanel();
+
             p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
             p.setAlignmentX(Component.CENTER_ALIGNMENT);
             p.setOpaque(false);
@@ -56,56 +54,47 @@ public class Tarjeta extends JPanel {
             ImageIcon iconoPergamino = new ImageIcon(
                     getClass().getResource("/menu/CUADRO_GIF.png")
             );
+
             Image imagenPergamino = iconoPergamino.getImage().getScaledInstance(
-                    600,
-                    450,
+                    460,
+                    360,
                     Image.SCALE_SMOOTH
             );
 
             JLabel pergamino = new JLabel(new ImageIcon(imagenPergamino));
             pergamino.setAlignmentX(Component.CENTER_ALIGNMENT);
-            pergamino.setLayout(null); // Layout nulo para posicionar el GIF manualmente
 
-            // ==================== GIF con opacidad ====================
-            JPanel gifPanel = new JPanel() {
-                private ImageIcon icon;
-                {
-                    URL url = getClass().getResource(lecciones.get(index).getRutaGif());
-                    if (url != null) {
-                        int x = 455;
-                        int y = 325;
-                        ImageIcon original = new ImageIcon(url);
-                        Image img = original.getImage().getScaledInstance(x, y, Image.SCALE_DEFAULT);
-                        icon = new ImageIcon(img);
-                    } else {
-                        icon = null;
-                    }
-                }
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    if (icon != null) {
-                        Graphics2D g2d = (Graphics2D) g.create();
-                        // Dibujar el GIF
-                        g2d.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
-                        // Aplicar capa oscura con opacidad
-                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-                        g2d.setColor(Color.BLACK);
-                        g2d.fillRect(0, 0, getWidth(), getHeight());
-                        g2d.dispose();
-                    } else {
-                        g.setColor(Color.RED);
-                        g.drawString("NO GIF", 10, 20);
-                    }
-                }
-            };
-            gifPanel.setBounds(58, 55, 455, 325);
-            gifPanel.setOpaque(false);
-            pergamino.add(gifPanel);
+            // Permite poner componentes encima del pergamino
+            pergamino.setLayout(new java.awt.GridBagLayout());
 
-            // Agregar el pergamino al panel principal
+            // ==================== GIF ====================
+            JLabel gif = new JLabel();
+
+            URL url = getClass().getResource(lecciones.get(i).getRutaGif());
+
+            System.out.println("GIF URL: " + url);
+
+            if (url != null) {
+
+                ImageIcon icon = new ImageIcon(url);
+                // Se conserva el ImageIcon original para mantener la animación.
+                // getScaledInstance puede impedir el renderizado de algunos GIF.
+                gif.setIcon(icon);
+
+            } else {
+                gif.setText("NO SE ENCUENTRA GIF");
+            }
+
+            gif.setHorizontalAlignment(JLabel.CENTER);
+            gif.setOpaque(false);
+
+            // Agregar el GIF encima del pergamino
+            pergamino.add(gif);
+
+            // Agregar el pergamino al panel
             p.add(pergamino);
-            p.add(Box.createVerticalStrut(30));
+
+            p.add(Box.createVerticalStrut(5));
 
             // ==================== AUDIO ====================
             JButton btnReproducirAudio = new JButton();
