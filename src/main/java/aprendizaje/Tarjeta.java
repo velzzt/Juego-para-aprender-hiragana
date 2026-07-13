@@ -1,11 +1,14 @@
 package aprendizaje;
 
+import java.awt.AlphaComposite;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.InputStream;
 import java.net.URL;
@@ -43,7 +46,7 @@ public class Tarjeta extends JPanel {
 
         //Se crea un panel para cada tarjeta y se le añaden sus componentes
         for (int i = 0; i < lecciones.size(); i++) {
-
+            final int index = i;
             JPanel p = new JPanel();
 
             p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
@@ -65,34 +68,47 @@ public class Tarjeta extends JPanel {
             pergamino.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             // Permite poner componentes encima del pergamino
-            pergamino.setLayout(new java.awt.GridBagLayout());
+            pergamino.setLayout(null);
 
-            // ==================== GIF ====================
-            JLabel gif = new JLabel();
+            // ==================== GIF con opacidad (más oscuro) ====================
+            JPanel gifPanel = new JPanel() {
+                private ImageIcon icon;
+                {
+                    URL url = getClass().getResource(lecciones.get(index).getRutaGif());
+                    if (url != null) {
+                        int x = 455;
+                        int y = 325;
+                        ImageIcon original = new ImageIcon(url);
+                        Image img = original.getImage().getScaledInstance(x, y, Image.SCALE_DEFAULT);
+                        icon = new ImageIcon(img);
+                    } else {
+                        icon = null;
+                    }
+                }
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    if (icon != null) {
+                        Graphics2D g2d = (Graphics2D) g.create();
+                        // Dibujar el GIF
+                        g2d.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+                        // Dibujar una capa negra semitransparente encima para oscurecer
+                        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+                        g2d.setColor(Color.BLACK);
+                        g2d.fillRect(0, 0, getWidth(), getHeight());
+                        g2d.dispose();
+                    } else {
+                        g.setColor(Color.RED);
+                        g.drawString("NO GIF", 10, 20);
+                    }
+                }
+            };
+            gifPanel.setBounds(58, 55, 455, 325);
+            gifPanel.setOpaque(false);
+            pergamino.add(gifPanel);
 
-            URL url = getClass().getResource(lecciones.get(i).getRutaGif());
-
-            System.out.println("GIF URL: " + url);
-
-            if (url != null) {
-
-                ImageIcon icon = new ImageIcon(url);
-
-                gif.setIcon(icon);
-
-            } else {
-                gif.setText("NO SE ENCUENTRA GIF");
-            }
-
-            gif.setHorizontalAlignment(JLabel.CENTER);
-            gif.setOpaque(false);
-
-            // Agregar el GIF encima del pergamino
-            pergamino.add(gif);
-
-            // Agregar el pergamino al panel
+            // Agregar el pergamino al panel principal
             p.add(pergamino);
-
             p.add(Box.createVerticalStrut(30));
 
             // ==================== AUDIO ====================
