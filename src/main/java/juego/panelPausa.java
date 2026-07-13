@@ -13,6 +13,7 @@ import aprendizaje.MenuPrincipal;
 public class panelPausa extends JPanel {
     private HiraganaEnemigo juego;
     private Font fuentePixel;
+    private Font fuentePixelBold;
 
     public panelPausa(HiraganaEnemigo juego, JFrame frame, MenuPrincipal menu) {
         this.juego = juego;
@@ -21,31 +22,33 @@ public class panelPausa extends JPanel {
         setBackground(new Color(0, 0, 0, 180));
 
         fuentePixel = cargarFuentePixel();
+        fuentePixelBold = cargarFuentePixelBold();
         iniciarComponentes();
     }
 
     private void iniciarComponentes() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.insets = new Insets(15, 15, 15, 15);
         gbc.anchor = GridBagConstraints.CENTER;
 
         // Título "PAUSA" con fuente pixel
         gbc.gridy = 0;
+        gbc.insets = new Insets(5, 10, 12, 10);
         JLabel lblPausa = new JLabel("PAUSA", SwingConstants.CENTER);
-        lblPausa.setFont(fuentePixel.deriveFont(Font.BOLD, 60f));
+        lblPausa.setFont(fuentePixelBold.deriveFont(60f));
         lblPausa.setForeground(Color.WHITE);
         add(lblPausa, gbc);
 
         // Botón Continuar
         gbc.gridy = 1;
-        JButton btnContinuar = crearBotonEstilizado("Continuar", 220, 150);
+        gbc.insets = new Insets(0, 0, 0, 0);
+        JButton btnContinuar = crearBotonEstilizado("Continuar", 300, 100);
         btnContinuar.addActionListener(e -> juego.continuarJuego());
         add(btnContinuar, gbc);
 
         // Botón Volver al Menú
         gbc.gridy = 2;
-        JButton btnMenu = crearBotonEstilizado("Volver al Menú", 300, 150);
+        JButton btnMenu = crearBotonEstilizado("Volver al Menú", 300, 100);
         btnMenu.addActionListener(e -> juego.volverMenu());
         add(btnMenu, gbc);
     }
@@ -83,7 +86,7 @@ public class panelPausa extends JPanel {
         } catch (Exception e) {
             // Fallback: botón clásico si no se cargan los sprites
             btn.setText(texto);
-            btn.setFont(new Font("Segoe UI", Font.BOLD, 24));
+            btn.setFont(fuentePixelBold.deriveFont(24f));
             btn.setBackground(new Color(110, 180, 80));
             btn.setForeground(Color.WHITE);
             btn.setContentAreaFilled(true);
@@ -113,6 +116,18 @@ public class panelPausa extends JPanel {
             }
         } catch (Exception e) {
             System.err.println("No se pudo cargar PixelOperator en panelPausa.");
+        }
+        return new Font(Font.MONOSPACED, Font.BOLD, 25);
+    }
+
+    private Font cargarFuentePixelBold() {
+        try (InputStream fuenteStream = getClass().getResourceAsStream(
+                "/fuentes/PixelOperator-Bold.ttf")) {
+            if (fuenteStream != null) {
+                return Font.createFont(Font.TRUETYPE_FONT, fuenteStream);
+            }
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar PixelOperator Bold en panelPausa.");
         }
         return new Font(Font.MONOSPACED, Font.BOLD, 25);
     }

@@ -140,7 +140,6 @@ public class PanelAprender extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Sonido.reproducirClick();
-                Sonido.reanudarMusicaMenu();
                 menuPanel.mostrarMenu();
             }
         };

@@ -337,6 +337,8 @@ public class PantallaCarga extends JPanel {
 
                 // Precarga la música del menú.
                 Sonido.precargarMusicaMenu();
+                Sonido.precargarMusicaAprender();
+                Sonido.precargarMusicaJugar();
 
                 // Decodifica el PNG grande del título mientras se muestra
                 // la pantalla de carga.

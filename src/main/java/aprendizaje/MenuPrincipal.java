@@ -264,6 +264,7 @@ public class MenuPrincipal extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Sonido.reproducirClick();
                 Sonido.detenerMusicaMenu();
+                Sonido.reproducirMusicaAprender();
 
                 //guardamos una referencia de la ventana para usarlo en PanelAprender (boton volver)
                 PanelAprender panelAprender =
@@ -330,7 +331,10 @@ public class MenuPrincipal extends JFrame {
     // según las dimensiones actuales del panel
     private void actualizarPosicionesComponentes() {
 
-        if (panel == null || btnAprender == null || btnJugar == null) {
+        if (panel == null
+                || btnAprender == null
+                || btnJugar == null
+                || btnCreditos == null) {
             return;
         }
 
@@ -344,7 +348,7 @@ public class MenuPrincipal extends JFrame {
         // se limita el tamaño mínimo y máximo para mantener una apariencia simetrica
         int anchoBoton = Math.max(
                 320,
-                Math.min(400, panelWidth / 4)
+                Math.min(370, panelWidth / 4)
         );
 
         // boton_inicio.png y boton_hover.png miden 1536 x 512 (3:1).
@@ -353,11 +357,11 @@ public class MenuPrincipal extends JFrame {
 
         int xBotones = (panelWidth - anchoBoton) / 2;
         int yPrimerBoton =
-                (int) Math.round(panelHeight * 0.58);
+                (int) Math.round(panelHeight * 0.54);
 
         // Los PNG ya contienen margen transparente arriba y abajo. Un pequeño
         // solapamiento de sus bounds acerca visualmente ambos marcos.
-        int espacio = -Math.max(12, altoBoton / 6);
+        int espacio = -Math.max(12, altoBoton / 3);
 
         btnAprender.setBounds(
                 xBotones,
@@ -392,6 +396,14 @@ public class MenuPrincipal extends JFrame {
                 btnJugar,
                 rutaJugarNormal,
                 rutaJugarHover,
+                anchoBoton,
+                altoBoton
+        );
+
+        actualizarIconoBoton(
+                btnCreditos,
+                rutaAprenderNormal,
+                rutaAprenderHover,
                 anchoBoton,
                 altoBoton
         );
@@ -741,11 +753,17 @@ public class MenuPrincipal extends JFrame {
     // Método que restaura la vista del menú principal (el que se guardo como
     // referencia en el constructor) en PanelAprender
     public void mostrarMenu() {
+        Sonido.detenerMusicaAprender();
+        Sonido.detenerMusicaJugar();
+        Sonido.reproducirMusicaMenu();
         mostrarVista(panel);
     }
 
     // Método que restaura la vista del panelAprender (se utiliza en PanelLeccion)
     public void mostrarPanelAprender() {
+        Sonido.detenerMusicaMenu();
+        Sonido.detenerMusicaJugar();
+        Sonido.reproducirMusicaAprender();
         mostrarVista(new PanelAprender(this));
     }
 

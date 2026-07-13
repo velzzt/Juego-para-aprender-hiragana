@@ -67,9 +67,7 @@ public class PanelRepaso extends JPanel {
         this.fuentePixel = cargarFuentePixel();
         setLayout(new BorderLayout(20, 20));
 
-        if (numeroBoton == 1) {
-            cargarFondoRepaso();
-        }
+        cargarFondoRepaso();
 
         // Hiragana 1
         if (numeroBoton == 1) {
@@ -254,6 +252,7 @@ public class PanelRepaso extends JPanel {
                 // La respuesta correcta se guarda en la posición [5]
                 if (boton.getText().equals(preguntas[indice][5])) {
 
+                    Sonido.reproducirBuena();
                     indice++;
 
                     // Mostrar siguiente pregunta
@@ -267,7 +266,7 @@ public class PanelRepaso extends JPanel {
                     }
                 //si se marca la alternativa incorrecta se reinicia
                 }else{ 
-                    
+                    Sonido.reproducirMala();
                     mensajeIntentalo();
                 }
             }
